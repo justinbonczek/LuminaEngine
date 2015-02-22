@@ -1,0 +1,81 @@
+﻿Build started 10/20/2014 12:24:38 PM.
+     1>Project "C:\Dev\Projects\LightingSimulation\DirectXTK\DirectXTK_Windows81.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Dev\Projects\LightingSimulation\DirectXTK\Inc /IC:\Dev\Projects\LightingSimulation\DirectXTK\Src /IC:\Dev\Projects\LightingSimulation\DirectXTK\ /I"Generated Files\\" /IBin\Windows81\Win32\Release\ /Zi /ZW /ZW:nostdlib /nologo /W4 /WX- /sdl /MP /O2 /Oi /Oy- /GL /D _UNICODE /D UNICODE /D NDEBUG /D _LIB /D _UNICODE /D UNICODE /D WINAPI_FAMILY=WINAPI_FAMILY_APP /Gm- /EHsc /MD /GS /Gy /arch:SSE2 /fp:fast /Zc:wchar_t /Zc:forScope /Yc"pch.h" /Fp"Bin\Windows81\Win32\Release\DirectXTK.pch" /Fo"Bin\Windows81\Win32\Release\\" /Fd"Bin\Windows81\Win32\Release\DirectXTK.pdb" /Gd /TP /FU"C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1\ExtensionSDKs\Microsoft.VCLibs\12.0\References\CommonConfiguration\neutral\platform.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /analyze- /errorReport:prompt Src\pch.cpp
+         pch.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Dev\Projects\LightingSimulation\DirectXTK\Inc /IC:\Dev\Projects\LightingSimulation\DirectXTK\Src /IC:\Dev\Projects\LightingSimulation\DirectXTK\Inc /IC:\Dev\Projects\LightingSimulation\DirectXTK\Src /IC:\Dev\Projects\LightingSimulation\DirectXTK\ /I"Generated Files\\" /IBin\Windows81\Win32\Release\ /Zi /ZW /ZW:nostdlib /nologo /W4 /WX- /sdl /MP /O2 /Oi /Oy- /GL /D _UNICODE /D UNICODE /D NDEBUG /D _LIB /D _UNICODE /D UNICODE /D WINAPI_FAMILY=WINAPI_FAMILY_APP /Gm- /EHsc /MD /GS /Gy /arch:SSE2 /fp:fast /Zc:wchar_t /Zc:forScope /Yu"pch.h" /Fp"Bin\Windows81\Win32\Release\DirectXTK.pch" /Fo"Bin\Windows81\Win32\Release\\" /Fd"Bin\Windows81\Win32\Release\DirectXTK.pdb" /Gd /TP /FU"C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1\ExtensionSDKs\Microsoft.VCLibs\12.0\References\CommonConfiguration\neutral\platform.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /analyze- /errorReport:prompt Audio\AudioEngine.cpp Audio\SoundEffect.cpp Audio\SoundEffectInstance.cpp Audio\WaveBank.cpp Audio\WaveBankReader.cpp Audio\WAVFileReader.cpp
+         AudioEngine.cpp
+         SoundEffect.cpp
+         SoundEffectInstance.cpp
+         WaveBank.cpp
+         WaveBankReader.cpp
+         WAVFileReader.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Dev\Projects\LightingSimulation\DirectXTK\Inc /IC:\Dev\Projects\LightingSimulation\DirectXTK\Src /IC:\Dev\Projects\LightingSimulation\DirectXTK\ /I"Generated Files\\" /IBin\Windows81\Win32\Release\ /Zi /ZW /ZW:nostdlib /nologo /W4 /WX- /sdl /MP /O2 /Oi /Oy- /GL /D _UNICODE /D UNICODE /D NDEBUG /D _LIB /D _UNICODE /D UNICODE /D WINAPI_FAMILY=WINAPI_FAMILY_APP /Gm- /EHsc /MD /GS /Gy /arch:SSE2 /fp:fast /Zc:wchar_t /Zc:forScope /Yu"pch.h" /Fp"Bin\Windows81\Win32\Release\DirectXTK.pch" /Fo"Bin\Windows81\Win32\Release\\" /Fd"Bin\Windows81\Win32\Release\DirectXTK.pdb" /Gd /TP /FU"C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1\ExtensionSDKs\Microsoft.VCLibs\12.0\References\CommonConfiguration\neutral\platform.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /analyze- /errorReport:prompt Audio\DynamicSoundEffectInstance.cpp Audio\SoundCommon.cpp Src\AlphaTestEffect.cpp Src\BasicEffect.cpp Src\CommonStates.cpp Src\DDSTextureLoader.cpp Src\DGSLEffect.cpp Src\DGSLEffectFactory.cpp Src\DualTextureEffect.cpp Src\EffectCommon.cpp Src\EffectFactory.cpp Src\BinaryReader.cpp Src\EnvironmentMapEffect.cpp Src\GamePad.cpp Src\GeometricPrimitive.cpp Src\Model.cpp Src\ModelLoadCMO.cpp Src\ModelLoadSDKMESH.cpp Src\ScreenGrab.cpp Src\SimpleMath.cpp Src\SkinnedEffect.cpp Src\SpriteBatch.cpp Src\PrimitiveBatch.cpp Src\SpriteFont.cpp Src\VertexTypes.cpp Src\WICTextureLoader.cpp
+         DynamicSoundEffectInstance.cpp
+         SoundCommon.cpp
+         AlphaTestEffect.cpp
+         BasicEffect.cpp
+         CommonStates.cpp
+         DDSTextureLoader.cpp
+         DGSLEffect.cpp
+         DGSLEffectFactory.cpp
+         DualTextureEffect.cpp
+         EffectCommon.cpp
+         EffectFactory.cpp
+         BinaryReader.cpp
+         EnvironmentMapEffect.cpp
+         GamePad.cpp
+         GeometricPrimitive.cpp
+         Model.cpp
+         ModelLoadCMO.cpp
+         ModelLoadSDKMESH.cpp
+         ScreenGrab.cpp
+         SimpleMath.cpp
+         SkinnedEffect.cpp
+         SpriteBatch.cpp
+         PrimitiveBatch.cpp
+         SpriteFont.cpp
+         VertexTypes.cpp
+         WICTextureLoader.cpp
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"Bin\Windows81\Win32\Release\DirectXTK.lib" /NOLOGO /LTCG /IGNORE:4264 Bin\Windows81\Win32\Release\AudioEngine.obj
+         Bin\Windows81\Win32\Release\DynamicSoundEffectInstance.obj
+         Bin\Windows81\Win32\Release\SoundCommon.obj
+         Bin\Windows81\Win32\Release\SoundEffect.obj
+         Bin\Windows81\Win32\Release\SoundEffectInstance.obj
+         Bin\Windows81\Win32\Release\WaveBank.obj
+         Bin\Windows81\Win32\Release\WaveBankReader.obj
+         Bin\Windows81\Win32\Release\WAVFileReader.obj
+         Bin\Windows81\Win32\Release\AlphaTestEffect.obj
+         Bin\Windows81\Win32\Release\BasicEffect.obj
+         Bin\Windows81\Win32\Release\CommonStates.obj
+         Bin\Windows81\Win32\Release\DDSTextureLoader.obj
+         Bin\Windows81\Win32\Release\DGSLEffect.obj
+         Bin\Windows81\Win32\Release\DGSLEffectFactory.obj
+         Bin\Windows81\Win32\Release\DualTextureEffect.obj
+         Bin\Windows81\Win32\Release\EffectCommon.obj
+         Bin\Windows81\Win32\Release\EffectFactory.obj
+         Bin\Windows81\Win32\Release\BinaryReader.obj
+         Bin\Windows81\Win32\Release\EnvironmentMapEffect.obj
+         Bin\Windows81\Win32\Release\GamePad.obj
+         Bin\Windows81\Win32\Release\GeometricPrimitive.obj
+         Bin\Windows81\Win32\Release\Model.obj
+         Bin\Windows81\Win32\Release\ModelLoadCMO.obj
+         Bin\Windows81\Win32\Release\ModelLoadSDKMESH.obj
+         Bin\Windows81\Win32\Release\pch.obj
+         Bin\Windows81\Win32\Release\ScreenGrab.obj
+         Bin\Windows81\Win32\Release\SimpleMath.obj
+         Bin\Windows81\Win32\Release\SkinnedEffect.obj
+         Bin\Windows81\Win32\Release\SpriteBatch.obj
+         Bin\Windows81\Win32\Release\PrimitiveBatch.obj
+         Bin\Windows81\Win32\Release\SpriteFont.obj
+         Bin\Windows81\Win32\Release\VertexTypes.obj
+         Bin\Windows81\Win32\Release\WICTextureLoader.obj
+         DirectXTK_Windows81.vcxproj -> C:\Dev\Projects\LightingSimulation\DirectXTK\Bin\Windows81\Win32\Release\DirectXTK.lib
+       _GenerateProjectPriFileCore:
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x64\MakePri.exe New -ProjectRoot C:\Dev\Projects\LightingSimulation\DirectXTK\ -ConfigXml Bin\Windows81\Win32\Release\priconfig.xml -OutputFile C:\Dev\Projects\LightingSimulation\DirectXTK\Bin\Windows81\Win32\Release\DirectXTK.pri -IndexName DirectXTK -Verbose -Overwrite  
+     1>Done Building Project "C:\Dev\Projects\LightingSimulation\DirectXTK\DirectXTK_Windows81.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:12.07
