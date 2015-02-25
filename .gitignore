@@ -1,5 +1,6 @@
 build/*
 ipch/*
+LuminaEngine/Debug/*
 
 # Batch files for workflow
 *.bat
