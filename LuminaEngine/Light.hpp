@@ -2,8 +2,6 @@
 #define LIGHT_HPP
 
 #include "Config.hpp"
-#include "ShadowMap.hpp"
-
 NS_BEGIN
 /// <summary>
 /// Abstract class for lights
@@ -16,9 +14,8 @@ public:
 	XMFLOAT4 ambient;
 	XMFLOAT4 diffuse;
 	XMFLOAT4 specular;
-	//bool hasShadows;
-	//ShadowMap* shadowmap;
-	//bool pad[7];
+	bool hasShadows;
+	XMFLOAT3 pad;
 private:
 
 };

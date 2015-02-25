@@ -54,6 +54,11 @@ bool Game::Initialize(void)
 	return true;
 }
 
+void Game::SetRenderTarget()
+{
+	window->SetRenderTarget();
+}
+
 Game* Game::GetInstance()
 {
 	return &instance;

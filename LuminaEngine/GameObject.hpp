@@ -62,6 +62,16 @@ public:
 	LightMaterial LightMaterial(void);
 
 	/// <summary>
+	/// 
+	/// </summary>
+	UINT GetTextureTileU();
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	UINT GetTextureTileV();
+
+	/// <summary>
 	/// Sets whether or not the object should be drawn as if it is a shadow pass
 	/// </summary>
 	void SetShadowPass(bool val);

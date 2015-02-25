@@ -69,6 +69,36 @@ public:
 	LightMaterial GetLightMaterial(void);
 
 	/// <summary>
+	/// 
+	/// </summary>
+	void SetTextureTileU(UINT val);
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	void SetTextureTileV(UINT val);
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	void SetTextureTileUV(UINT val);
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	void SetTextureTileUV(UINT u, UINT v);
+
+	/// <summary>
+	/// 
+	/// </summary>
+	UINT GetTextureTileU();
+
+	/// <summary>
+	/// 
+	/// </summary>
+	UINT GetTextureTileV();
+
+	/// <summary>
 	/// Returns a pointer to the material's sampler
 	/// </summary>
 	ID3D11SamplerState* Sampler(void);
@@ -76,7 +106,7 @@ public:
 private:
 	Shader* shader;
 	LightMaterial* lightMat;
-	UINT tileXZ[2];
+	UINT tileUV[2];
 
 	ID3D11ShaderResourceView* srv;
 	ID3D11ShaderResourceView* normalSrv;

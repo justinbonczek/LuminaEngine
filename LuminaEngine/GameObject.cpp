@@ -75,6 +75,7 @@ void GameObject::Update(float dt)
 
 void GameObject::Draw(ID3D11DeviceContext* devCon)
 {
+	// TODO: SHADOW PASS OPTIMIZATION
 	if (!shadowPass)
 		mat->BindShader(devCon);
 	else
@@ -142,6 +143,16 @@ XMFLOAT4X4 GameObject::WorldInverseTranspose(void)
 LightMaterial GameObject::LightMaterial(void)
 {
 	return mat->GetLightMaterial();
+}
+
+UINT GameObject::GetTextureTileU()
+{
+	return mat->GetTextureTileU();
+}
+
+UINT GameObject::GetTextureTileV()
+{
+	return mat->GetTextureTileV();
 }
 
 void GameObject::SetShadowPass(bool val)

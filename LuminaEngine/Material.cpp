@@ -6,6 +6,8 @@ NS_BEGIN
 Material::Material(wchar_t* filepath, ID3D11SamplerState* sampler, Window& window) :
 sampler(sampler)
 {
+	tileUV[0] = 1;
+	tileUV[1] = 1;
 	CreateWICTextureFromFile(
 		window.Device(),
 		filepath,
@@ -16,6 +18,8 @@ sampler(sampler)
 
 Material::Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, Window& window)
 {
+	tileUV[0] = 1;
+	tileUV[1] = 1;
 	D3D11_SAMPLER_DESC wsd;
 	ZeroMemory(&wsd, sizeof(D3D11_SAMPLER_DESC));
 	wsd.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -36,6 +40,8 @@ Material::Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, Window& window
 
 Material::Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, ID3D11SamplerState* _sampler, Window& window)
 {
+	tileUV[0] = 1;
+	tileUV[1] = 1;
 	shader = new Shader();
 	shader->LoadShader(vertfilepath, Vert, window.Device());
 	shader->LoadShader(pixelfilepath, Pixel, window.Device());
@@ -110,6 +116,38 @@ void Material::SetLightMaterial(LightMaterial* _lightMat)
 LightMaterial Material::GetLightMaterial(void)
 {
 	return *lightMat;
+}
+
+void Material::SetTextureTileU(UINT val)
+{
+	tileUV[0] = val;
+}
+
+void Material::SetTextureTileV(UINT val)
+{
+	tileUV[1] = val;
+}
+
+void Material::SetTextureTileUV(UINT val)
+{
+	tileUV[0] = val;
+	tileUV[1] = val;
+}
+
+void Material::SetTextureTileUV(UINT u, UINT v)
+{
+	tileUV[0] = u;
+	tileUV[1] = v;
+}
+
+UINT Material::GetTextureTileU()
+{
+	return tileUV[0];
+}
+
+UINT Material::GetTextureTileV()
+{
+	return tileUV[1];
 }
 
 ID3D11SamplerState* Material::Sampler(void)

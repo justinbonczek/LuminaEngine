@@ -13,6 +13,9 @@ cbuffer perObject : register(b1)
 	matrix world;
 	matrix worldInverseTranspose;
 	LightMaterial lightMat;
+	int tileU;
+	int tileV;
+	float pad[2];
 }
 
 cbuffer lights : register(b2)
@@ -23,6 +26,7 @@ cbuffer lights : register(b2)
 	int numDL;
 	int numPL;
 	int numSL;
+	float lpad;
 }
 
 struct VertexToPixel
@@ -44,7 +48,7 @@ float4 main(VertexToPixel input) : SV_TARGET
 	input.normal = normalize(input.normal);
 
 	// Unpack normal
-	float3 normalT = _NormalMap.Sample(_Sampler, input.uv);
+	float3 normalT = _NormalMap.Sample(_Sampler, float2(input.uv.x * tileU, input.uv.y * tileV));
 	normalT = 2.0f * normalT - 1.0f;
 
 	// Calculate TBN
@@ -94,7 +98,7 @@ float4 main(VertexToPixel input) : SV_TARGET
 	}
 
 	// Sample texture(s)
-	float4 texColor = _Texture.Sample(_Sampler, float2(input.uv.x, input.uv.y));
+	float4 texColor = _Texture.Sample(_Sampler, float2(input.uv.x * tileU, input.uv.y * tileV));
 
 	// Calculate lit color based on lighting and shadow calculations
 	float4 litColor = texColor * (ambient + diffuse) + spec;

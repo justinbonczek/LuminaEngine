@@ -1,4 +1,5 @@
 #include "TestScene.hpp"
+#include "Game.hpp"
 
 using namespace Lumina;
 
@@ -10,38 +11,40 @@ void TestScene::LoadAssets(Lumina::Window& window)
 	SpotLight* sLight = new SpotLight();
 	sLight->ambient = XMFLOAT4(0.05f, 0.05f, 0.05f, 1.0f);
 	sLight->diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
-	sLight->specular = XMFLOAT4(0.8f, 0.8f, 0.8f, 64.0f);
-	sLight->attenuation = XMFLOAT3(0.0f, 0.1f, 0.0f);
-	sLight->position = XMFLOAT3(0.0f, 0.0f, -10.0f);
-	sLight->direction = XMFLOAT3(0.0f, 0.0f, 1.0f);
-	sLight->spot  = 75.0f;
+	sLight->specular = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	sLight->attenuation = XMFLOAT3(0.0f, 0.05f, 0.0f);
+	sLight->position = XMFLOAT3(0.0f, 10.0f, 10.0f);
+	sLight->direction = XMFLOAT3(-sLight->position.x, -sLight->position.y, -sLight->position.z);
+	sLight->spot  = 30.0f;
 	sLight->range = 100.0f;
+	sLight->hasShadows = true;
 
 	MeshData cubeData;
-	MeshGenerator::CreateCube(3.0f, 3.0f, 3.0f, cubeData);
-	Mesh* cubeMesh = new Mesh(cubeData, window.Device());
+	MeshGenerator::CreateSphere(3.0f, 4, cubeData);
+	Mesh* cubeMesh = new Mesh(cubeData, game->GetDevice());
 
 	MeshData planeData;
-	MeshGenerator::CreatePlane(10.0f, 10.0f, 2, 2, planeData);
-	Mesh* planeMesh = new Mesh(planeData, window.Device());
+	MeshGenerator::CreatePlane(20.0f, 20.0f, 2, 2, planeData);
+	Mesh* planeMesh = new Mesh(planeData, game->GetDevice());
 
-	Material* defaultMat = new Material(L"DefaultVert.cso", L"DefaultPix.cso", window);
-
-	Material* cubeMat = new Material(L"DefaultVert.cso", L"TexturedBumpedLitPix.cso", window);
-	cubeMat->LoadTexture(L"content/Textures/brick.jpg", window.Device());
-	cubeMat->LoadNormal(L"content/Textures/brick_normal.jpg", window.Device());
+	Material* cubeMat = new Material(L"ShadowedVert.cso", L"ShadowTexturedBumpedLitPix.cso", window);
+	cubeMat->LoadTexture(L"content/Textures/brick.jpg", game->GetDevice());
+	cubeMat->LoadNormal(L"content/Textures/brick_normal.jpg", game->GetDevice());
+	
+	Material* planeMat = new Material(L"ShadowedVert.cso", L"ShadowedTexturedBumpedLitPix.cso", window);
 
 	LightMaterial * lightMat = new LightMaterial();
 	lightMat->ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	lightMat->diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	lightMat->specular = XMFLOAT4(0.05f, 0.05f, 0.05f, 1.0f);
 	cubeMat->SetLightMaterial(lightMat);
-	defaultMat->SetLightMaterial(lightMat);
+	planeMat->SetLightMaterial(lightMat);
 
 	GameObject* cube = new GameObject(cubeMesh, cubeMat);
 	cube->SetPosition(0.0f, 0.0f, 0.0f);
 
-	GameObject* plane = new GameObject(planeMesh, defaultMat);
+	GameObject* plane = new GameObject(planeMesh, planeMat);
+	plane->SetPosition(0.0f, -3.0f, 0.0f);
 
 	AddGameObject(cube);
 	AddGameObject(plane);
@@ -57,8 +60,6 @@ void TestScene::Update(float dt)
 
 void TestScene::Draw(Lumina::Window& window)
 {
-	camera.UpdateViewMatrix();
-
 	DrawScene();
 }
 

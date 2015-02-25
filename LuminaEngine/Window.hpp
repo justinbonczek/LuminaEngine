@@ -59,6 +59,11 @@ public:
 	void SetResolution(UINT width, UINT height);
 
 	/// <summary>
+	/// Resets the render target to the back buffer
+	/// </summary>
+	void SetRenderTarget();
+
+	/// <summary>
 	/// Returns whether or not the window is currently open
 	/// </summary>
 	bool IsOpen(void);

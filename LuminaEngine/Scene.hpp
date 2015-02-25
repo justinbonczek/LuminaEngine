@@ -2,8 +2,7 @@
 #define SCENE_H
 
 #include "Config.hpp"
-#include "Light.hpp"
-#include "Material.hpp"
+#include "Lumina.hpp"
 
 NS_BEGIN
 
@@ -25,6 +24,9 @@ struct PerObjectData
 	XMFLOAT4X4 world;
 	XMFLOAT4X4 worldInverseTranspose;
 	LightMaterial lightMat;
+	UINT tileU;
+	UINT tileV;
+	float pad[2];
 };
 
 struct LightData
@@ -35,7 +37,16 @@ struct LightData
 	UINT numDL;
 	UINT numPL;
 	UINT numSL;
-	UINT numShadowMaps;
+	float pad;
+};
+
+struct ShadowData
+{
+	XMFLOAT4X4 sView[TOTALNUMLIGHTS];
+	XMFLOAT4X4 sProj[TOTALNUMLIGHTS];
+	UINT numSM;
+	float resolution;
+	float pad[2];
 };
 
 // TODO: Window references should be Game references
@@ -117,6 +128,21 @@ protected:
 	void AddLight(SpotLight* light);
 
 	/// <summary>
+	/// 
+	/// </summary>
+	void AddShadowMap(DirectionalLight* light);
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	void AddShadowMap(PointLight* light);
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	void AddShadowMap(SpotLight* light);
+
+	/// <summary>
 	/// Sets the given camera as the current active camera
 	/// </summary>
 	void SetActiveCamera(Camera& camera);
@@ -129,17 +155,7 @@ protected:
 	/// <summary>
 	/// 
 	/// </summary>
-	void CreateDirectionalShadowMap(DirectionalLight* dLight);
-
-	/// <summary>
-	/// 
-	/// </summary>
-	void CreateSpotShadowMap(SpotLight* sLight);
-
-	/// <summary>
-	/// 
-	/// </summary>
-	void CreatePointShadowMap(PointLight* pLight);
+	void SetShadowMap(ShadowMap* shadowMap, int index);
 
 	Camera* activeCamera;
 
@@ -156,7 +172,10 @@ protected:
 	LightData lightData;
 	ID3D11Buffer* lightBuffer;
 
-	ID3D11ShaderResourceView* shadowMaps[NUMDIRECTIONALLIGHTS + NUMPOINTLIGHTS + NUMSPOTLIGHTS];
+	ShadowData shadowData;
+	ID3D11Buffer* shadowBuffer;
+
+	ShadowMap* shadowMaps[NUMDIRECTIONALLIGHTS + NUMPOINTLIGHTS + NUMSPOTLIGHTS];
 };
 
 NS_END

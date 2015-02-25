@@ -7,5 +7,6 @@
 #include "MeshGenerator.hpp"
 #include "Camera.hpp"
 #include "Light.hpp"
+#include "ShadowMap.hpp"
 
 #endif

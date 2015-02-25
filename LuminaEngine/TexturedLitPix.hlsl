@@ -13,6 +13,9 @@ cbuffer perObject : register(b1)
 	matrix world;
 	matrix worldInverseTranspose;
 	LightMaterial lightMat;
+	int tileU;
+	int tileV;
+	float pad[2];
 }
 
 cbuffer lights : register(b2)
@@ -23,6 +26,7 @@ cbuffer lights : register(b2)
 	int numDL;
 	int numPL;
 	int numSL;
+	float lpad;
 }
 
 struct VertexToPixel
@@ -35,7 +39,7 @@ struct VertexToPixel
 	float3 tangent		: TANGENT;
 };
 
-Texture2D _Texture : register(t0);
+Texture2D _Texture : register(t3);
 SamplerState _Sampler : register(s0);
 
 float4 main(VertexToPixel input) : SV_TARGET
@@ -47,12 +51,12 @@ float4 main(VertexToPixel input) : SV_TARGET
 	float distToEye = length(eyePos - input.worldpos);
 	float3 toEye = normalize(eyePos - input.worldpos);
 
-		// Create light values and set them to zero
-		float4 ambient = float4(0, 0, 0, 0);
-		float4 diffuse = float4(0, 0, 0, 0);
-		float4 spec = float4(0, 0, 0, 0);
+	// Create light values and set them to zero
+	float4 ambient = float4(0, 0, 0, 0);
+	float4 diffuse = float4(0, 0, 0, 0);
+	float4 spec = float4(0, 0, 0, 0);
 
-		float4 A, D, S;
+	float4 A, D, S;
 
 	///
 	// Lighting Calculations
@@ -82,7 +86,7 @@ float4 main(VertexToPixel input) : SV_TARGET
 	}
 
 	// Sample texture(s)
-	float4 texColor = _Texture.Sample(_Sampler, input.uv);
+	float4 texColor = _Texture.Sample(_Sampler, float2(input.uv.x * tileU, input.uv.y * tileV));
 
 	// Calculate lit color based on lighting and shadow calculations
 	float4 litColor = texColor * (ambient + diffuse) + spec;

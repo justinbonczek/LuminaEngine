@@ -3,6 +3,8 @@ struct DirectionalLight
 	float4 ambient;
 	float4 diffuse;
 	float4 specular;
+	bool hasShadows;
+	float3 bpad;
 	float3 direction;
 	float pad;
 };
@@ -12,6 +14,8 @@ struct PointLight
 	float4 ambient;
 	float4 diffuse;
 	float4 specular;
+	bool hasShadows;
+	float3 bpad;
 	float3 position;
 	float range;
 	float3 attenuation;
@@ -23,6 +27,8 @@ struct SpotLight
 	float4 ambient;
 	float4 diffuse;
 	float4 specular;
+	bool hasShadows;
+	float3 bpad;
 	float3 position;
 	float range;
 	float3 direction;
@@ -41,11 +47,13 @@ struct LightMaterial
 void ComputeDirectionalLight(LightMaterial mat, DirectionalLight L, float3 normal, float3 toEye,
 	 out float4 ambient, out float4 diffuse, out float4 spec)
 {
+	L.direction = normalize(L.direction);
 	ambient = float4(0.0, 0.0, 0.0, 0.0);
 	diffuse = float4(0.0, 0.0, 0.0, 0.0);
 	spec = float4(0.0, 0.0, 0.0, 0.0);
 
 	float3 lightVec = -L.direction;
+
 	ambient = mat.ambient * L.ambient;
 	float diffuseFactor = dot(lightVec, normal);
 	if (diffuseFactor > 0)
@@ -89,6 +97,7 @@ void ComputePointLight(LightMaterial mat, PointLight L, float3 pos, float3 norma
 void ComputeSpotLight(LightMaterial mat, SpotLight L, float3 pos, float3 normal, float3 toEye,
 	out float4 ambient, out float4 diffuse, out float4 spec)
 {
+	L.direction = normalize(L.direction);
 	ambient = float4(0, 0, 0, 0);
 	diffuse = float4(0, 0, 0, 0);
 	spec = float4(0, 0, 0, 0);
@@ -108,7 +117,7 @@ void ComputeSpotLight(LightMaterial mat, SpotLight L, float3 pos, float3 normal,
 	}
 
 	float spot = pow(max(dot(-lightVec, L.direction), 0.0), L.spot);
-	float att = spot / dot(L.attenuation, float3(1.0, d, d*d));
+	float att = spot / dot (L.attenuation, float3(1.0, d, d*d));
 	ambient *= spot;
 	diffuse *= att;
 	spec *= att;

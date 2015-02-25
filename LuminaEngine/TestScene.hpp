@@ -1,7 +1,6 @@
 #ifndef TESTSCENE_HPP
 #define TESTSCENE_HPP
 
-#include "Lumina.hpp"
 #include "Scene.hpp"
 
 class TestScene : public Lumina::Scene

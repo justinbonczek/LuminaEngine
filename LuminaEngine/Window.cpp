@@ -288,6 +288,12 @@ void Window::SetResolution(UINT width, UINT height)
 	OnResize();
 }
 
+void Window::SetRenderTarget()
+{
+	devCon->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
+	devCon->RSSetViewports(1, &viewport);
+}
+
 float Window::AspectRatio(void)const
 {
 	return (float)windowWidth / windowHeight;

@@ -3,7 +3,7 @@
 
 #include "Config.hpp"
 
-#define PI 3.13149265359f
+
 
 NS_BEGIN
 

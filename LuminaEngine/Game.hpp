@@ -23,6 +23,8 @@ public:
 	/// </summary>
 	bool Initialize(void);
 
+	void SetRenderTarget();
+
 	static Game* GetInstance();
 
 	ID3D11Device* GetDevice();

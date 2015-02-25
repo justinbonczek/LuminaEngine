@@ -2,16 +2,18 @@
 #define SHADOWMAP_H
 
 #include "Config.hpp"
+#include "Light.hpp"
 
 NS_BEGIN
 
 class ShadowMap
 {
 public:
-	ShadowMap(ID3D11Device* dev, UINT width, UINT height);
+	//ShadowMap(DirectionalLight* light, ID3D11Device* dev, UINT width = SHADOWMAPRESOLUTION, UINT height = SHADOWMAPRESOLUTION);
+	ShadowMap(DirectionalLight* light, ID3D11Device* dev, UINT width = SHADOWMAPRESOLUTION, UINT height = SHADOWMAPRESOLUTION);
+	ShadowMap(PointLight* light, ID3D11Device* dev, UINT width = SHADOWMAPRESOLUTION, UINT height = SHADOWMAPRESOLUTION);
+	ShadowMap(SpotLight* light, ID3D11Device* dev, UINT width = SHADOWMAPRESOLUTION, UINT height = SHADOWMAPRESOLUTION);	
 	~ShadowMap();
-
-	ID3D11ShaderResourceView* GetDepthMapSrv();
 
 	/// <summary>Set the shadowmap to the pixel shader for shadow calculations
 	/// </summary>
@@ -20,9 +22,19 @@ public:
 	/// <summary>Sets up the render target for shadowmap rendering
 	/// </summary>
 	void BindDSVAndSetNullRenderTarget(ID3D11DeviceContext* devCon);
+
+	XMFLOAT4X4 GetViewMatrix();
+	XMFLOAT4X4 GetViewMatrixTranspose();
+	XMFLOAT4X4 GetProjectionMatrix();
+	XMFLOAT4X4 GetProjectionMatrixTranspose();
+	float GetResolution();
+	ID3D11ShaderResourceView* GetDepthMapSrv();
 private:
 	UINT width;
 	UINT height;
+
+	XMFLOAT4X4 view;
+	XMFLOAT4X4 projection;
 
 	ID3D11ShaderResourceView* shadowMap;
 	ID3D11DepthStencilView* dsv;
