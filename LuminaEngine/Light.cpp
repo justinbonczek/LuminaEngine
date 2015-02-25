@@ -7,6 +7,9 @@ Light::Light()
 
 }
 
+Light::~Light()
+{}
+
 DirectionalLight::DirectionalLight()
 {
 

@@ -23,6 +23,8 @@ public:
 	/// </summary>
 	void BindDSVAndSetNullRenderTarget(ID3D11DeviceContext* devCon);
 
+	void UpdateViewProjMatrix();
+
 	XMFLOAT4X4 GetViewMatrix();
 	XMFLOAT4X4 GetViewMatrixTranspose();
 	XMFLOAT4X4 GetProjectionMatrix();
@@ -30,6 +32,8 @@ public:
 	float GetResolution();
 	ID3D11ShaderResourceView* GetDepthMapSrv();
 private:
+	Light* light;
+
 	UINT width;
 	UINT height;
 

@@ -1,5 +1,7 @@
 struct DirectionalLight
 {
+	float4 dpad;
+
 	float4 ambient;
 	float4 diffuse;
 	float4 specular;
@@ -11,6 +13,8 @@ struct DirectionalLight
 
 struct PointLight
 {
+	float4 dpad;
+
 	float4 ambient;
 	float4 diffuse;
 	float4 specular;
@@ -24,6 +28,8 @@ struct PointLight
 
 struct SpotLight
 {
+	float4 dpad;
+
 	float4 ambient;
 	float4 diffuse;
 	float4 specular;

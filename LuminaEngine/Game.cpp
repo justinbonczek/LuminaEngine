@@ -18,6 +18,7 @@ Game::~Game()
 
 int Game::Run(void)
 {
+	Timer::Initialize();
 	MSG msg = { 0 };
 
 	scene.LoadAssets(*window);

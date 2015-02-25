@@ -6,10 +6,12 @@ NS_BEGIN
 /// <summary>
 /// Abstract class for lights
 /// </summary>
-struct Light
+class Light
 {
 public:
 	Light();
+	virtual ~Light();
+	XMFLOAT3 dPad;
 
 	XMFLOAT4 ambient;
 	XMFLOAT4 diffuse;
@@ -23,7 +25,7 @@ private:
 /// <summary>
 /// Sun-like light
 /// </summary>
-struct DirectionalLight : public Light
+class DirectionalLight : public Light
 {
 public:
 	DirectionalLight();
@@ -37,7 +39,7 @@ private:
 /// <summary>
 /// Lightbulb-like light
 /// </summary>
-struct PointLight : public Light
+class PointLight : public Light
 {
 public:
 	PointLight();
@@ -53,7 +55,7 @@ private:
 /// <summary>
 /// Flashlight-like light
 /// </summary>
-struct SpotLight : public Light
+class SpotLight : public Light
 {
 public:
 	SpotLight();

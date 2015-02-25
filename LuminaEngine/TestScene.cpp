@@ -19,6 +19,13 @@ void TestScene::LoadAssets(Lumina::Window& window)
 	sLight->range = 100.0f;
 	sLight->hasShadows = true;
 
+	DirectionalLight* dLight = new DirectionalLight();
+	dLight->ambient = XMFLOAT4(0.05f, 0.05f, 0.05f, 1.0f);
+	dLight->diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	dLight->specular = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	dLight->direction = XMFLOAT3(0.0f, -1.0f, -0.5f);
+	dLight->hasShadows = true;
+
 	MeshData cubeData;
 	MeshGenerator::CreateSphere(3.0f, 4, cubeData);
 	Mesh* cubeMesh = new Mesh(cubeData, game->GetDevice());
@@ -48,12 +55,16 @@ void TestScene::LoadAssets(Lumina::Window& window)
 
 	AddGameObject(cube);
 	AddGameObject(plane);
-	AddLight(sLight);
+	//AddLight(sLight);
+	AddLight(dLight);
 }
 
 void TestScene::Update(float dt)
 {
 	UpdateObjects(dt);
+
+	float tTime = Timer::GetTotalTime();
+	lightData.dLight[0].direction = XMFLOAT3(0.0, sin(tTime), cos(tTime));
 
 	MoveCamera(dt);
 }

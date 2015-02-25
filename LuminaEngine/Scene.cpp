@@ -171,7 +171,7 @@ void Scene::AddLight(DirectionalLight* light)
 	lightData.numDL++;
 
 	if (light->hasShadows)
-		AddShadowMap(light);
+		AddShadowMap(&lightData.dLight[lightData.numDL - 1]);
 }
 
 void Scene::AddLight(PointLight* light)
@@ -181,7 +181,7 @@ void Scene::AddLight(PointLight* light)
 	lightData.numPL++;
 
 	if (light->hasShadows)
-		AddShadowMap(light);
+		AddShadowMap(&lightData.pLight[lightData.numPL - 1]);
 }
 
 void Scene::AddLight(SpotLight* light)
@@ -191,7 +191,7 @@ void Scene::AddLight(SpotLight* light)
 	lightData.numSL++;
 
 	if (light->hasShadows)
-		AddShadowMap(light);
+		AddShadowMap(&lightData.sLight[lightData.numSL - 1]);
 }
 
 void Scene::AddShadowMap(DirectionalLight* light)
@@ -228,6 +228,7 @@ void Scene::CalculateShadows()
 	// Render Shadowmaps
 	for (int i = 0; i < shadowData.numSM; i++)
 	{
+		shadowMaps[i]->UpdateViewProjMatrix();
 		SetShadowMap(shadowMaps[i], i);
 		
 		for (GameObject* obj : objs)

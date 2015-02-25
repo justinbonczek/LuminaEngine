@@ -21,7 +21,7 @@ int Timer::frameRate;
 
 float Timer::GetFrameTime(void) { return frameTime.count(); }
 float Timer::GetElapsedTime(void) { return elapsedTime.count(); }
-float Timer::GetTotalTime(void){ return (std::chrono::system_clock::now() - programStart).count(); }
+float Timer::GetTotalTime(void){ return (std::chrono::duration<float>(std::chrono::system_clock::now() - programStart).count()); }
 
 void Timer::Initialize(void)
 {
