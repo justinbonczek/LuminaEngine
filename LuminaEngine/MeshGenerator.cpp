@@ -383,4 +383,15 @@ void MeshGenerator::CreateCube(float width, float depth, float height, MeshData&
 	data.indices.push_back(22);
 }
 
+void MeshGenerator::CreatePoint(MeshData& data)
+{
+	Vertex vert;
+
+	vert.Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	vert.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+
+	data.vertices.push_back(vert);
+	data.indices.push_back(0);
+}
+
 NS_END

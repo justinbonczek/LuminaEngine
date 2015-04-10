@@ -3,8 +3,6 @@
 
 #include "Config.hpp"
 
-
-
 NS_BEGIN
 
 struct Vertex

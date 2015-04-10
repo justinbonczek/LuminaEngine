@@ -23,6 +23,11 @@ public:
 	/// Creates the mesh data for a cube primitive
 	/// </summary>
 	static void CreateCube(float width, float depth, float height, MeshData& data);
+
+	/// <summary>
+	/// Creates the mesh data for a point (literally one Vertex)
+	/// </summary>
+	static void CreatePoint(MeshData& data);
 private:
 	/// <summary>
 	/// Subdivides the faces of a mesh

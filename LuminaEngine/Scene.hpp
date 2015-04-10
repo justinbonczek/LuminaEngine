@@ -57,11 +57,13 @@ public:
 	Scene();
 	virtual ~Scene();
 
+	void Initialize(GraphicsDevice* _graphicsDevice);
+
 	/// <summary>
 	/// OVERRIDE THIS
 	/// Runs at initialization to load assets into memory and create objects needed
 	/// </summary>
-	virtual void LoadAssets(Window& window) = 0;
+	virtual void LoadAssets() = 0;
 
 	/// <summary>
 	/// OVERRIDE THIS
@@ -73,15 +75,13 @@ public:
 	/// OVERRIDE THIS
 	/// Renders objects to the window
 	/// </summary>
-	virtual void Draw(Window& window) = 0;
+	virtual void Draw() = 0;
 
 	/// <summary>
 	/// Does some heavy lifting and sets up the graphics pipeline for rendering
 	/// </summary>
-	virtual void InitializePipeline(Window& window);
+	virtual void InitializePipeline();
 protected:
-	Game* game;
-
 	/// <summary>
 	/// Updates GameObjects. Should be called in Update()
 	/// </summary>
@@ -105,12 +105,19 @@ protected:
 	/// <summary>
 	/// Sends necessary data to the GPU once per GameObject
 	/// </summary>
-	virtual void UpdateObjectData(GameObject& obj);
+	void UpdateObjectData(GameObject& obj);
+
+	void UpdateParticleObjectData(ParticleEmitter* e);
 
 	/// <summary>
 	/// Adds a game object to the list of objects
 	/// </summary>
 	void AddGameObject(GameObject* obj);
+
+	/// <summary>
+	/// 
+	/// </summary>
+	void AddSystem(ParticleEmitter* pEmitter);
 
 	/// <summary>
 	/// Adds a directional light to the scene up to the maximum number of lights
@@ -157,11 +164,14 @@ protected:
 	/// </summary>
 	void SetShadowMap(ShadowMap* shadowMap, int index);
 
+	GraphicsDevice* graphicsDevice;
 	Camera* activeCamera;
 
 	std::vector<GameObject*> objs;
+	std::vector<ParticleEmitter*> particles;
 
 	ID3D11InputLayout* inputLayout;
+	ID3D11InputLayout* particleInputLayout;
 
 	PerFrameData perFrameData;
 	ID3D11Buffer* perFrameBuffer;

@@ -3,6 +3,7 @@
 
 #include "Config.hpp"
 #include "Vertex.hpp"
+#include "GraphicsDevice.hpp"
 
 #include <assimp\Importer.hpp>
 #include <assimp\scene.h>
@@ -14,7 +15,7 @@ class Mesh
 {
 public:
 	Mesh::Mesh(std::string filepath, ID3D11Device* dev);
-	Mesh(MeshData& mesh, ID3D11Device* dev);
+	Mesh(MeshData& mesh, GraphicsDevice* graphicsDevice);
 
 	~Mesh();
 

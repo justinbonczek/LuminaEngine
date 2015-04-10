@@ -3,20 +3,8 @@
 #include "Window.hpp"
 
 NS_BEGIN
-Material::Material(wchar_t* filepath, ID3D11SamplerState* sampler, Window& window) :
-sampler(sampler)
-{
-	tileUV[0] = 1;
-	tileUV[1] = 1;
-	CreateWICTextureFromFile(
-		window.Device(),
-		filepath,
-		0,
-		&srv);
-	shader = new Shader();
-}
-
-Material::Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, Window& window)
+Material::Material(ID3D11Device* dev) :
+blendState(Transparency, dev)
 {
 	tileUV[0] = 1;
 	tileUV[1] = 1;
@@ -31,20 +19,75 @@ Material::Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, Window& window
 	wsd.MinLOD = 0;
 	wsd.MaxLOD = 0;
 	wsd.MipLODBias = 0;
-	window.Device()->CreateSamplerState(&wsd, &sampler);
-
-	shader = new Shader();
-	shader->LoadShader(vertfilepath, Vert, window.Device());
-	shader->LoadShader(pixelfilepath, Pixel, window.Device());
+	dev->CreateSamplerState(&wsd, &sampler);
 }
 
-Material::Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, ID3D11SamplerState* _sampler, Window& window)
+Material::Material(BlendType blendType, ID3D11Device* dev):
+blendState(blendType, dev)
+{
+	tileUV[0] = 1;
+	tileUV[1] = 1;
+	D3D11_SAMPLER_DESC wsd;
+	ZeroMemory(&wsd, sizeof(D3D11_SAMPLER_DESC));
+	wsd.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	wsd.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	wsd.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	wsd.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	wsd.MaxAnisotropy = 0;
+	wsd.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	wsd.MinLOD = 0;
+	wsd.MaxLOD = 0;
+	wsd.MipLODBias = 0;
+	dev->CreateSamplerState(&wsd, &sampler);
+
+	lightMat = new LightMaterial();
+}
+
+Material::Material(wchar_t* filepath, ID3D11SamplerState* sampler, GraphicsDevice* graphicsDevice) :
+sampler(sampler),
+blendState(Transparency, graphicsDevice->getDevice())
+{
+	tileUV[0] = 1;
+	tileUV[1] = 1;
+	CreateWICTextureFromFile(
+		graphicsDevice->getDevice(),
+		filepath,
+		0,
+		&srv);
+	shader = new Shader();
+}
+
+Material::Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, ID3D11Device* dev):
+blendState(Transparency, dev)
+{
+	tileUV[0] = 1;
+	tileUV[1] = 1;
+	D3D11_SAMPLER_DESC wsd;
+	ZeroMemory(&wsd, sizeof(D3D11_SAMPLER_DESC));
+	wsd.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	wsd.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	wsd.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	wsd.Filter = D3D11_FILTER_ANISOTROPIC;
+	wsd.MaxAnisotropy = 8;
+	wsd.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	wsd.MinLOD = 0;
+	wsd.MaxLOD = 0;
+	wsd.MipLODBias = 0;
+	dev->CreateSamplerState(&wsd, &sampler);
+
+	shader = new Shader();
+	shader->LoadShader(vertfilepath, Vert, dev);
+	shader->LoadShader(pixelfilepath, Pixel, dev);
+}
+
+Material::Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, ID3D11SamplerState* _sampler, GraphicsDevice* graphicsDevice) :
+blendState(Transparency, graphicsDevice->getDevice())
 {
 	tileUV[0] = 1;
 	tileUV[1] = 1;
 	shader = new Shader();
-	shader->LoadShader(vertfilepath, Vert, window.Device());
-	shader->LoadShader(pixelfilepath, Pixel, window.Device());
+	shader->LoadShader(vertfilepath, Vert, graphicsDevice->getDevice());
+	shader->LoadShader(pixelfilepath, Pixel, graphicsDevice->getDevice());
 	sampler = _sampler;
 }
 
@@ -54,6 +97,7 @@ Material::~Material()
 	delete lightMat;
 	
 	DELETECOM(srv);
+	DELETECOM(normalSrv);
 	DELETECOM(sampler);
 }
 
@@ -82,11 +126,16 @@ void Material::BindSRV(UINT index, ID3D11DeviceContext* devCon)
 
 void Material::BindShader(ID3D11DeviceContext* devCon)
 {
-	shader->SetShader(Vert, devCon);
-	shader->SetShader(Pixel, devCon);
-	shader->SetShader(Geometry, devCon);
-	shader->SetShader(Compute, devCon);
-	shader->SetShader(Domain, devCon);
+	shader->BindShader(Vert, devCon);
+	shader->BindShader(Pixel, devCon);
+	shader->BindShader(Geometry, devCon);
+	shader->BindShader(Compute, devCon);
+	shader->BindShader(Domain, devCon);
+}
+
+void Material::UnbindPixelShader(ID3D11DeviceContext* devCon)
+{
+	shader->UnbindPixelShader(devCon);
 }
 
 void Material::BindSampler(ID3D11DeviceContext* devCon)
@@ -98,14 +147,37 @@ void Material::BindSampler(ID3D11DeviceContext* devCon)
 	}
 }
 
+void Material::BindBlendState(ID3D11DeviceContext* devCon)
+{
+	blendState.BindBlendState(devCon);
+}
+
 void Material::LoadTexture(wchar_t* texturefilepath, ID3D11Device* dev)
 {
 	CreateWICTextureFromFile(dev, texturefilepath, 0, &srv);
+	if (!srv)
+	{
+		printf("Failed to load texture: "); printf((char *)texturefilepath); printf("\n");
+	}
 }
 
 void Material::LoadNormal(wchar_t* texturefilepath, ID3D11Device* dev)
 {
 	CreateWICTextureFromFile(dev, texturefilepath, 0, &normalSrv);
+	if (!srv)
+	{
+		printf("Failed to load texture: "); printf((char *)texturefilepath); printf("\n");
+	}
+}
+
+void Material::SetShader(Shader* shader)
+{
+	this->shader = shader;
+}
+
+void Material::SetShader(wchar_t* filepath, ShaderType type, ID3D11Device* dev)
+{
+	shader->LoadShader(filepath, type, dev);
 }
 
 void Material::SetLightMaterial(LightMaterial* _lightMat)

@@ -58,6 +58,12 @@
     <Filter Include="Source Files\Lumina\Graphics">
       <UniqueIdentifier>{cbb58630-1b16-4e0c-a04b-cda75348e066}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Lumina\Graphics\States">
+      <UniqueIdentifier>{159ef76d-9168-4ac8-82fe-be5e824a223c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Lumina\Graphics\States">
+      <UniqueIdentifier>{d2cf061e-d061-47bb-a688-4b336edfed79}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -93,19 +99,37 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\Lumina\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sampler.cpp">
-      <Filter>Source Files\Lumina</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source Files\Lumina\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Source Files\Lumina\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTexture.cpp">
+    <ClCompile Include="ShadowMap.cpp">
       <Filter>Source Files\Lumina\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="ShadowMap.cpp">
+    <ClCompile Include="ParticleEmitter.cpp">
+      <Filter>Source Files\Lumina\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\Lumina\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\Lumina</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsManager.cpp">
+      <Filter>Source Files\Lumina\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="BlendState.cpp">
+      <Filter>Source Files\Lumina\Graphics\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SamplerState.cpp">
+      <Filter>Source Files\Lumina\Graphics\States</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthStencilState.cpp">
+      <Filter>Source Files\Lumina\Graphics\States</Filter>
+    </ClCompile>
+    <ClCompile Include="RasterizerState.cpp">
+      <Filter>Source Files\Lumina\Graphics\States</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsDevice.cpp">
       <Filter>Source Files\Lumina\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -149,20 +173,38 @@
     <ClInclude Include="Vertex.hpp">
       <Filter>Header Files\Lumina\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sampler.hpp">
-      <Filter>Header Files\Lumina\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Light.hpp">
       <Filter>Header Files\Lumina\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Scene.hpp">
       <Filter>Header Files\Lumina</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTexture.hpp">
-      <Filter>Header Files\Lumina\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="ShadowMap.hpp">
       <Filter>Header Files\Lumina\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter.hpp">
+      <Filter>Header Files\Lumina\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.hpp">
+      <Filter>Header Files\Lumina\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsManager.hpp">
+      <Filter>Header Files\Lumina\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="BlendState.hpp">
+      <Filter>Header Files\Lumina\Graphics\States</Filter>
+    </ClInclude>
+    <ClInclude Include="RasterizerState.hpp">
+      <Filter>Header Files\Lumina\Graphics\States</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencilState.hpp">
+      <Filter>Header Files\Lumina\Graphics\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsDevice.hpp">
+      <Filter>Header Files\Lumina\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerState.hpp">
+      <Filter>Header Files\Lumina\Graphics\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +237,21 @@
     </FxCompile>
     <FxCompile Include="ShadowedTexturedBumpedLitPix.hlsl">
       <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleBillboardGeo.hlsl">
+      <Filter>Shaders\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleGenerationGeo.hlsl">
+      <Filter>Shaders\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleStreamVert.hlsl">
+      <Filter>Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="DrawParticlePix.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="DrawParticleVert.hlsl">
+      <Filter>Shaders\Vertex</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

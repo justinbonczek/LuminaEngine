@@ -3,6 +3,7 @@
 
 #include "Config.hpp"
 #include "Light.hpp"
+#include "GraphicsDevice.hpp"
 
 NS_BEGIN
 
@@ -21,7 +22,7 @@ public:
 
 	/// <summary>Sets up the render target for shadowmap rendering
 	/// </summary>
-	void BindDSVAndSetNullRenderTarget(ID3D11DeviceContext* devCon);
+	void BindDSVAndSetNullRenderTarget(GraphicsDevice* graphicsDevice);
 
 	void UpdateViewProjMatrix();
 

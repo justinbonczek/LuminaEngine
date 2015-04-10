@@ -3,6 +3,8 @@
 
 #include "Config.hpp"
 #include "Shader.hpp"
+#include "BlendState.hpp"
+#include "GraphicsDevice.hpp"
 
 NS_BEGIN
 
@@ -19,18 +21,20 @@ struct LightMaterial
 class Material
 {
 public:
+	Material(ID3D11Device* dev);
+	Material(BlendType blendType, ID3D11Device* dev);
 	/// <summary>
 	/// Uses the filepath of a texture to create a material
 	/// </summary>
-	Material(wchar_t* filepath, ID3D11SamplerState* sampler, Window& window);
+	Material(wchar_t* filepath, ID3D11SamplerState* sampler, GraphicsDevice* graphicsDevice);
 	~Material();
 
 
 	/// <summary>
 	/// Uses the filepath of a vertex and a pixel shader to create a material
 	/// </summary>
-	Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, Window& window);
-	Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, ID3D11SamplerState* _sampler, Window& window);
+	Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, ID3D11Device* dev);
+	Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, ID3D11SamplerState* _sampler, GraphicsDevice* graphicsDevice);
 
 	/// <summary>
 	/// Binds the material's shader resource to the pipeline
@@ -43,10 +47,14 @@ public:
 	/// </summary>
 	void BindShader(ID3D11DeviceContext* devCon);
 
+	void UnbindPixelShader(ID3D11DeviceContext* devCon);
+
 	/// <summary>
 	/// Binds the material's sampler to the pipeline
 	/// </summary>
 	void BindSampler(ID3D11DeviceContext* devCon);
+
+	void BindBlendState(ID3D11DeviceContext* devCon);
 
 	/// <summary>
 	/// Loads a texture from the file and stores it into the srv
@@ -58,6 +66,9 @@ public:
 	/// </summary>
 	void LoadNormal(wchar_t* texturefilepath, ID3D11Device *dev);
 
+	void SetShader(Shader* shader);
+	void SetShader(wchar_t* filepath, ShaderType type, ID3D11Device* dev);
+	
 	/// <summary>
 	/// Sets the material's light-interaction values
 	/// </summary>
@@ -111,6 +122,7 @@ private:
 	ID3D11ShaderResourceView* srv;
 	ID3D11ShaderResourceView* normalSrv;
 	ID3D11SamplerState* sampler;
+	BlendState blendState;
 };
 
 NS_END

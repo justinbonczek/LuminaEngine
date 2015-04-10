@@ -22,10 +22,10 @@ Camera::~Camera()
 
 }
 
-void Camera::Initialize(Lumina::Window& window)
+void Camera::Initialize(Lumina::GraphicsDevice graphicsDevice)
 {
 	SetPosition(0.0f, 0.0f, -10.0f);
-	SetLens(0.25f * 3.1415926535f, window.AspectRatio(), 0.1f, 200.0f);
+	SetLens(0.25f * 3.1415926535f, graphicsDevice.getAspectRatio(), 0.1f, 200.0f);
 }
 
 XMVECTOR Camera::GetPositionXM()const

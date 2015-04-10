@@ -79,9 +79,14 @@ void GameObject::Draw(ID3D11DeviceContext* devCon)
 	if (!shadowPass)
 		mat->BindShader(devCon);
 	else
+	{
 		mat->BindShader(devCon);
+		mat->UnbindPixelShader(devCon);
+	}
+
 	mat->BindSampler(devCon);
 	mat->BindSRV(devCon);
+	mat->BindBlendState(devCon);
 
 	if (mesh->VBuffer())
 	{
@@ -138,6 +143,21 @@ XMFLOAT4X4 GameObject::WorldInverseTranspose(void)
 	XMFLOAT4X4 temp;
 	XMStoreFloat4x4(&temp, XMMatrixTranspose(XMMatrixInverse(nullptr, XMLoadFloat4x4(&worldMat))));
 	return temp;
+}
+
+void GameObject::LoadTexture(wchar_t* filepath, ID3D11Device* dev)
+{
+	mat->LoadTexture(filepath, dev);
+}
+
+void GameObject::SetShader(Shader* shader)
+{
+	mat->SetShader(shader);
+}
+
+void GameObject::SetShader(wchar_t* filepath, ShaderType type, ID3D11Device* dev)
+{
+	mat->SetShader(filepath, type, dev);
 }
 
 LightMaterial GameObject::LightMaterial(void)

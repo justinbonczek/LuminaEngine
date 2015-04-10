@@ -4,29 +4,39 @@ NS_BEGIN
 
 Game Game::instance;
 
-Game::Game()
-{
-	window = new Window(GetModuleHandle(NULL), 1280, 720, L"I'm a window!");
-	Timer::Initialize();
+Game::Game():
+graphicsManager(GraphicsManager::getInstance())
+{ 
+
 }
 
 Game::~Game()
 {
-	delete window;
-	window = 0;
+
+}
+
+bool Game::Initialize(void)
+{
+	if (!graphicsManager.Initialize())
+		return false;
+	Timer::Initialize();
+
+	scene.Initialize(graphicsManager.getActiveDevice());
+
+	return true;
 }
 
 int Game::Run(void)
 {
-	Timer::Initialize();
 	MSG msg = { 0 };
 
-	scene.LoadAssets(*window);
-	scene.InitializePipeline(*window);
+	scene.LoadAssets();
+	scene.InitializePipeline();
 
 	while (msg.message != WM_QUIT)
 	{
 		Timer::StartFrame();
+
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
@@ -34,12 +44,13 @@ int Game::Run(void)
 		}
 		else
 		{
-			window->Clear();
+			graphicsManager.Clear();
 
-			scene.Update(Timer::GetFrameTime());
-			scene.Draw(*window);
+			float dt = Timer::GetFrameTime(); 
+			scene.Update(dt);
+			scene.Draw();
 		
-			window->Display();
+			graphicsManager.Display();
 		}
 
 		Timer::StopFrame();
@@ -47,42 +58,36 @@ int Game::Run(void)
 	return (int)msg.wParam;
 }
 
-bool Game::Initialize(void)
-{
-	if (!window->Initialize())
-		return false;
-	
-	return true;
-}
-
-void Game::SetRenderTarget()
-{
-	window->SetRenderTarget();
-}
-
 Game* Game::GetInstance()
 {
 	return &instance;
 }
 
-ID3D11Device* Game::GetDevice()
+LRESULT Game::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	return window->Device();
-}
-
-ID3D11DeviceContext* Game::GetDeviceContext()
-{
-	return window->DeviceContext();
-}
-
-ID3D11RenderTargetView* Game::GetBackBufferView()
-{
-	return window->BackBuffer();
-}
-
-ID3D11DepthStencilView* Game::GetDepthStencilView()
-{
-	return window->DepthStencilView();
+	switch (msg)
+	{
+	case WM_SIZE:
+		if (graphicsManager.getActiveDevice()->getDevice())
+			graphicsManager.OnResize();
+		return 0;
+	case WM_ENTERSIZEMOVE:
+		return 0;
+	case WM_EXITSIZEMOVE:
+		if (graphicsManager.getActiveDevice()->getDevice())
+			graphicsManager.OnResize();
+		return 0;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	case WM_MENUCHAR:
+		return MAKELRESULT(0, MNC_CLOSE);
+	case WM_GETMINMAXINFO:
+		((MINMAXINFO*)lParam)->ptMinTrackSize.x = 200;
+		((MINMAXINFO*)lParam)->ptMinTrackSize.y = 200;
+		return 0;
+	}
+	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
 NS_END

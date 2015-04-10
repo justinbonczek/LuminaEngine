@@ -49,7 +49,7 @@ Mesh::Mesh(std::string filepath, ID3D11Device* dev)
 		&indexBuffer);
 }
 
-Mesh::Mesh(MeshData& mesh, ID3D11Device* dev)
+Mesh::Mesh(MeshData& mesh, GraphicsDevice* graphicsDevice)
 {
 	_vertices = mesh.vertices;
 	_indices = mesh.indices;
@@ -73,7 +73,7 @@ Mesh::Mesh(MeshData& mesh, ID3D11Device* dev)
 	vb.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA initVertData;
 	initVertData.pSysMem = vertices;
-	dev->CreateBuffer(
+	graphicsDevice->getDevice()->CreateBuffer(
 		&vb,
 		&initVertData,
 		&vertexBuffer);
@@ -88,7 +88,7 @@ Mesh::Mesh(MeshData& mesh, ID3D11Device* dev)
 	ib.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA initIndexData;
 	initIndexData.pSysMem = indices;
-	dev->CreateBuffer(
+	graphicsDevice->getDevice()->CreateBuffer(
 		&ib,
 		&initIndexData,
 		&indexBuffer);

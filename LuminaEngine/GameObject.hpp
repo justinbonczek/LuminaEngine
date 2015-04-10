@@ -56,6 +56,10 @@ public:
 	/// </summary>
 	XMFLOAT4X4 WorldInverseTranspose(void);
 
+	void LoadTexture(wchar_t* filepath, ID3D11Device* dev);
+	void SetShader(Shader* shader);
+	void SetShader(wchar_t* filepath, ShaderType type, ID3D11Device* dev);
+
 	/// <summary>
 	/// Returns the object's LightMaterial
 	/// </summary>

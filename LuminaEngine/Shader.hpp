@@ -9,6 +9,7 @@ enum ShaderType
 {
 	Vert,
 	Geometry,
+	GeometrySO,
 	Pixel,
 	Compute,
 	Domain
@@ -28,7 +29,11 @@ public:
 
 	/// <summary>Binds the given shader type to the pipeline for use
 	/// </summary>
-	void SetShader(ShaderType type, ID3D11DeviceContext* devCon);
+	void BindShader(ShaderType type, ID3D11DeviceContext* devCon);
+
+	void BindShader(ID3D11DeviceContext* devCon);
+
+	void UnbindPixelShader(ID3D11DeviceContext* devCon);
 private:
 	bool CheckLoaded(ShaderType type);
 

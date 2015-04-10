@@ -39,7 +39,7 @@ struct VertexToPixel
 	float3 tangent		: TANGENT;
 };
 
-Texture2D _Texture : register(t3);
+Texture2D _Texture : register(t0);
 SamplerState _Sampler : register(s0);
 
 float4 main(VertexToPixel input) : SV_TARGET

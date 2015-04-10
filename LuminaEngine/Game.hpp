@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "Config.hpp"
+#include "GraphicsManager.hpp"
 #include "Lumina.hpp"
 #include "TestScene.hpp"
 
@@ -10,8 +11,13 @@ NS_BEGIN
 class Game
 {
 public:
-	
 	~Game();
+	static Game* GetInstance();
+
+	/// <summary>
+	/// Handles Windows messages
+	/// </summary>
+	LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 	/// <summary>
 	/// Where the magic happens
@@ -23,19 +29,11 @@ public:
 	/// </summary>
 	bool Initialize(void);
 
-	void SetRenderTarget();
-
-	static Game* GetInstance();
-
-	ID3D11Device* GetDevice();
-	ID3D11DeviceContext* GetDeviceContext();
-	ID3D11RenderTargetView* GetBackBufferView();
-	ID3D11DepthStencilView* GetDepthStencilView();
 private:
 	Game();
 	static Game instance;
 
-	Window* window;
+	GraphicsManager& graphicsManager;
 	TestScene scene;
 };
 

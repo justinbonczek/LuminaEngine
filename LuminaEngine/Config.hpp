@@ -25,6 +25,7 @@
 #include <DirectXMath.h>
 #include <string>
 #include <vector>
+#include <utility>
 
 using namespace DirectX;
 

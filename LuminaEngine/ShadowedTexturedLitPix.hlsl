@@ -58,12 +58,12 @@ float4 main(VertexOutput input) : SV_TARGET
 	float distToEye = length(eyePos - input.worldpos);
 	float3 toEye = normalize(eyePos - input.worldpos);
 
-		// Create light values and set them to zero
-		float4 ambient = float4(0, 0, 0, 0);
-		float4 diffuse = float4(0, 0, 0, 0);
-		float4 spec = float4(0, 0, 0, 0);
+	// Create light values and set them to zero
+	float4 ambient = float4(0, 0, 0, 0);
+	float4 diffuse = float4(0, 0, 0, 0);
+	float4 spec = float4(0, 0, 0, 0);
 
-		float4 A, D, S;
+	float4 A, D, S;
 
 	///
 	// Lighting Calculations
@@ -99,6 +99,17 @@ float4 main(VertexOutput input) : SV_TARGET
 	{
 		input.shadowpos[i].xyz /= input.shadowpos[i].w;
 
+		//if (input.shadowpos[i].x > 1.0 || input.shadowpos[i].x < -1.0)
+		//{
+		//	percentLit += 9.0;
+		//	continue;
+		//}
+		//if (input.shadowpos[i].y > 1.0 || input.shadowpos[i].y < -1.0)
+		//{
+		//	percentLit += 9.0;
+		//	continue;
+		//}
+
 		// Calculate distance between each pixel
 		float dx = 1.0 / resolution;
 
@@ -124,8 +135,11 @@ float4 main(VertexOutput input) : SV_TARGET
 	// Sample texture(s)
 	float4 texColor = _Texture.Sample(_Sampler, float2(input.uv.x * tileU, input.uv.y * tileV));
 
+	diffuse *= percentLit;
+	spec *= percentLit;
+
 	// Calculate lit color based on lighting and shadow calculations
-	float4 litColor = texColor * (ambient + diffuse) * percentLit + spec * percentLit;
+	float4 litColor = texColor * (diffuse + ambient) + spec;
 
 	// Pass through alpha values
 	litColor.a = lightMat.diffuse.a;

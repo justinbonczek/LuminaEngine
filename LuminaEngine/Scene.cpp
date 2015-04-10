@@ -11,15 +11,13 @@
 NS_BEGIN
 
 Scene::Scene()
-{
-	game = Game::GetInstance();
-}
+{}
 
 Scene::~Scene()
 {
 	for (GameObject* n : objs)
 		delete n;
-	for (int i = 0; i < shadowData.numSM; i++)
+	for (unsigned int i = 0; i < shadowData.numSM; i++)
 	{
 		delete shadowMaps[i];
 	}
@@ -30,33 +28,49 @@ Scene::~Scene()
 	DELETECOM(shadowBuffer);
 }
 
-void Scene::InitializePipeline(Window& window)
+void Scene::Initialize(GraphicsDevice* _graphicsDevice)
+{
+	graphicsDevice = _graphicsDevice;
+}
+
+void Scene::InitializePipeline()
 {
 	///
 	// Input Layout
 	///
 	D3D11_INPUT_ELEMENT_DESC vDesc[] =
 	{
-		{ "POSITION", NULL, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, NULL },
-		{ "COLOR", NULL, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, NULL },
-		{ "TEXCOORD", NULL, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, NULL },
-		{ "NORMAL", NULL, DXGI_FORMAT_R32G32B32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, NULL },
-		{ "TANGENT", NULL, DXGI_FORMAT_R32G32B32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, NULL }
+		{ "POSITION", NULL, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, NULL },
+		{ "COLOR",    NULL, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, NULL },
+		{ "TEXCOORD", NULL, DXGI_FORMAT_R32G32_FLOAT,       0, 28, D3D11_INPUT_PER_VERTEX_DATA, NULL },
+		{ "NORMAL",   NULL, DXGI_FORMAT_R32G32B32_FLOAT,    0, 36, D3D11_INPUT_PER_VERTEX_DATA, NULL },
+		{ "TANGENT",  NULL, DXGI_FORMAT_R32G32B32_FLOAT,    0, 48, D3D11_INPUT_PER_VERTEX_DATA, NULL }
+	};
+
+	D3D11_INPUT_ELEMENT_DESC pVDesc[] = 
+	{
+		{ "POSITION",  NULL,	DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, NULL },
+		{ "TEXCOORD", 0,		DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, NULL },
+		{ "TEXCOORD", 1,		DXGI_FORMAT_R32G32_FLOAT,	 0, 24, D3D11_INPUT_PER_VERTEX_DATA, NULL },
+		{ "TEXCOORD", 2,		DXGI_FORMAT_R32_FLOAT,		 0, 32, D3D11_INPUT_PER_VERTEX_DATA, NULL },
+		{ "TEXCOORD", 3,		DXGI_FORMAT_R32_UINT,		 0, 36, D3D11_INPUT_PER_VERTEX_DATA, NULL }
 	};
 
 	ID3DBlob* vertexByte;
 	D3DReadFileToBlob(L"DefaultVert.cso", &vertexByte);
 
-	window.Device()->CreateInputLayout(vDesc, ARRAYSIZE(vDesc), vertexByte->GetBufferPointer(), vertexByte->GetBufferSize(), &inputLayout);
+	ID3DBlob* particleVertexByte;
+	D3DReadFileToBlob(L"ParticleStreamVert.cso", &particleVertexByte);
+
+	graphicsDevice->getDevice()->CreateInputLayout(vDesc, ARRAYSIZE(vDesc), vertexByte->GetBufferPointer(), vertexByte->GetBufferSize(), &inputLayout);
+	graphicsDevice->getDevice()->CreateInputLayout(pVDesc, ARRAYSIZE(pVDesc), particleVertexByte->GetBufferPointer(), particleVertexByte->GetBufferSize(), &particleInputLayout);
 
 	DELETECOM(vertexByte);
+	DELETECOM(particleVertexByte);
 
 	// Configure input assembly
-	window.DeviceContext()->IASetInputLayout(inputLayout);
-	window.DeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	// TODO: SAMPLER CLASS TO TAKE CARE OF THIS
-	HRESULT hr;
+	graphicsDevice->getDeviceContext()->IASetInputLayout(inputLayout);
+	graphicsDevice->getDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	D3D11_SAMPLER_DESC wsd;
 	ZeroMemory(&wsd, sizeof(D3D11_SAMPLER_DESC));
@@ -64,17 +78,19 @@ void Scene::InitializePipeline(Window& window)
 	ID3D11SamplerState* pcfSampler;
 	wsd.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
 	wsd.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
-	wsd.MinLOD = 0;
-	wsd.MaxLOD = 0;
-	wsd.MipLODBias = 0;
-	wsd.MaxAnisotropy = 0;
-	wsd.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	wsd.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	wsd.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	hr = game->GetDevice()->CreateSamplerState(&wsd, &pcfSampler);
+	wsd.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+	wsd.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+	wsd.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
 
-	game->GetDeviceContext()->VSSetSamplers(1, 1, &pcfSampler);
-	game->GetDeviceContext()->PSSetSamplers(1, 1, &pcfSampler);
+	wsd.BorderColor[0] = 1.0;
+	wsd.BorderColor[1] = 1.0;
+	wsd.BorderColor[2] = 1.0;
+	wsd.BorderColor[3] = 1.0;
+
+	graphicsDevice->getDevice()->CreateSamplerState(&wsd, &pcfSampler);
+
+	graphicsDevice->getDeviceContext()->VSSetSamplers(1, 1, &pcfSampler);
+	graphicsDevice->getDeviceContext()->PSSetSamplers(1, 1, &pcfSampler);
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
@@ -85,46 +101,69 @@ void Scene::InitializePipeline(Window& window)
 	bd.StructureByteStride	= 0;
 
 	bd.ByteWidth = sizeof(perFrameData);
-	window.Device()->CreateBuffer(&bd, NULL, &perFrameBuffer);
+	graphicsDevice->getDevice()->CreateBuffer(&bd, NULL, &perFrameBuffer);
 
 	bd.ByteWidth = sizeof(perObjectData);
-	window.Device()->CreateBuffer(&bd, NULL, &perObjectBuffer);
+	graphicsDevice->getDevice()->CreateBuffer(&bd, NULL, &perObjectBuffer);
 
 	bd.ByteWidth = sizeof(lightData);
-	window.Device()->CreateBuffer(&bd, NULL, &lightBuffer);
+	graphicsDevice->getDevice()->CreateBuffer(&bd, NULL, &lightBuffer);
 
 	bd.ByteWidth = sizeof(shadowData);
-	window.Device()->CreateBuffer(&bd, NULL, &shadowBuffer);
+	graphicsDevice->getDevice()->CreateBuffer(&bd, NULL, &shadowBuffer);
 
-	window.DeviceContext()->VSSetConstantBuffers(0, 1, &perFrameBuffer);
-	window.DeviceContext()->VSSetConstantBuffers(1, 1, &perObjectBuffer);
-	window.DeviceContext()->VSSetConstantBuffers(2, 1, &lightBuffer);
-	window.DeviceContext()->VSSetConstantBuffers(3, 1, &shadowBuffer);
+	graphicsDevice->getDeviceContext()->VSSetConstantBuffers(0, 1, &perFrameBuffer);
+	graphicsDevice->getDeviceContext()->VSSetConstantBuffers(1, 1, &perObjectBuffer);
+	graphicsDevice->getDeviceContext()->VSSetConstantBuffers(2, 1, &lightBuffer);
+	graphicsDevice->getDeviceContext()->VSSetConstantBuffers(3, 1, &shadowBuffer);
 
-	window.DeviceContext()->PSSetConstantBuffers(0, 1, &perFrameBuffer);
-	window.DeviceContext()->PSSetConstantBuffers(1, 1, &perObjectBuffer);
-	window.DeviceContext()->PSSetConstantBuffers(2, 1, &lightBuffer);
-	window.DeviceContext()->PSSetConstantBuffers(3, 1, &shadowBuffer);
+	graphicsDevice->getDeviceContext()->GSSetConstantBuffers(0, 1, &perFrameBuffer);
+	graphicsDevice->getDeviceContext()->GSSetConstantBuffers(1, 1, &perObjectBuffer);
+	graphicsDevice->getDeviceContext()->GSSetConstantBuffers(2, 1, &lightBuffer);
+	graphicsDevice->getDeviceContext()->GSSetConstantBuffers(3, 1, &shadowBuffer);
+
+	graphicsDevice->getDeviceContext()->PSSetConstantBuffers(0, 1, &perFrameBuffer);
+	graphicsDevice->getDeviceContext()->PSSetConstantBuffers(1, 1, &perObjectBuffer);
+	graphicsDevice->getDeviceContext()->PSSetConstantBuffers(2, 1, &lightBuffer);
+	graphicsDevice->getDeviceContext()->PSSetConstantBuffers(3, 1, &shadowBuffer);
 }
 
 void Scene::UpdateObjects(float dt)
 {
 	for (GameObject* n : objs)
 		n->Update(dt);
+	for (ParticleEmitter* p : particles)
+		p->Update(dt);
 }
 
 void Scene::DrawScene()
 {
+	graphicsDevice->getDeviceContext()->IASetInputLayout(inputLayout);
+	graphicsDevice->getDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// Shadow pass
 	CalculateShadows();
 
-	game->SetRenderTarget();
+	// Set the render target back
+	graphicsDevice->BindBackBuffer();
 
 	UpdateFrameData();
 
+	// Render Geometry
 	for (GameObject* n : objs)
 	{
 		UpdateObjectData(*n);
-		n->Draw(game->GetDeviceContext());
+		n->Draw(graphicsDevice->getDeviceContext());
+	}
+
+	// Render Particles
+	graphicsDevice->getDeviceContext()->IASetInputLayout(particleInputLayout);
+	graphicsDevice->getDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	
+	for (ParticleEmitter* p : particles)
+	{
+		UpdateParticleObjectData(p);
+		p->Draw(graphicsDevice->getDeviceContext());
 	}
 }
 
@@ -140,12 +179,12 @@ void Scene::UpdateFrameData()
 
 	for (int i = 0; i < shadowData.numSM; i++)
 	{
-		shadowMaps[i]->SetSRVToShaders(game->GetDeviceContext());
+		shadowMaps[i]->SetSRVToShaders(graphicsDevice->getDeviceContext());
 	}
 
-	game->GetDeviceContext()->UpdateSubresource(perFrameBuffer, 0, 0, &perFrameData, 0, 0);
-	game->GetDeviceContext()->UpdateSubresource(lightBuffer, 0, 0, &lightData, 0, 0);
-	game->GetDeviceContext()->UpdateSubresource(shadowBuffer, 0, 0, &shadowData, 0, 0);
+	graphicsDevice->getDeviceContext()->UpdateSubresource(perFrameBuffer, 0, 0, &perFrameData, 0, 0);
+	graphicsDevice->getDeviceContext()->UpdateSubresource(lightBuffer, 0, 0, &lightData, 0, 0);
+	graphicsDevice->getDeviceContext()->UpdateSubresource(shadowBuffer, 0, 0, &shadowData, 0, 0);
 }
 
 void Scene::UpdateObjectData(GameObject& obj)
@@ -156,12 +195,25 @@ void Scene::UpdateObjectData(GameObject& obj)
 	perObjectData.tileU = obj.GetTextureTileU();
 	perObjectData.tileV = obj.GetTextureTileV();
 
-	game->GetDeviceContext()->UpdateSubresource(perObjectBuffer, 0, NULL, &perObjectData, 0, 0);
+	graphicsDevice->getDeviceContext()->UpdateSubresource(perObjectBuffer, 0, NULL, &perObjectData, 0, 0);
+}
+
+void Scene::UpdateParticleObjectData(ParticleEmitter* e)
+{
+	perObjectData.world = e->WorldTranspose();
+	perObjectData.worldInverseTranspose = e->WorldInverseTranspose();
+
+	graphicsDevice->getDeviceContext()->UpdateSubresource(perObjectBuffer, 0, NULL, &perObjectData, 0, 0);
 }
 
 void Scene::AddGameObject(GameObject* obj)
 {
 	objs.push_back(obj);
+}
+
+void Scene::AddSystem(ParticleEmitter* pEmitter)
+{
+	particles.push_back(pEmitter);
 }
 
 void Scene::AddLight(DirectionalLight* light)
@@ -196,20 +248,20 @@ void Scene::AddLight(SpotLight* light)
 
 void Scene::AddShadowMap(DirectionalLight* light)
 {
-	shadowMaps[shadowData.numSM] = new ShadowMap(light, game->GetDevice());
+	shadowMaps[shadowData.numSM] = new ShadowMap(light, graphicsDevice->getDevice());
 	shadowData.numSM++;
 }
 
 void Scene::AddShadowMap(PointLight* light)
 {
 	// TODO: FUN CUBEMAPPING STUFF HERE
-	shadowMaps[shadowData.numSM] = new ShadowMap(light, game->GetDevice());
+	shadowMaps[shadowData.numSM] = new ShadowMap(light, graphicsDevice->getDevice());
 	shadowData.numSM++;
 }
 
 void Scene::AddShadowMap(SpotLight* light)
 {
-	shadowMaps[shadowData.numSM] = new ShadowMap(light, game->GetDevice());
+	shadowMaps[shadowData.numSM] = new ShadowMap(light, graphicsDevice->getDevice());
 	shadowData.numSM++;
 }
 
@@ -234,10 +286,9 @@ void Scene::CalculateShadows()
 		for (GameObject* obj : objs)
 		{
 			UpdateObjectData(*obj);
-			obj->Draw(game->GetDeviceContext());
+			obj->Draw(graphicsDevice->getDeviceContext());
 		}
 	}
-
 
 	for (GameObject* n : objs)
 	{
@@ -254,10 +305,10 @@ void Scene::SetShadowMap(ShadowMap* shadowMap, int index)
 	shadowData.sProj[index] = shadowMaps[index]->GetProjectionMatrixTranspose();
 	shadowData.resolution = shadowMaps[index]->GetResolution();
 
-	game->GetDeviceContext()->UpdateSubresource(perFrameBuffer, 0, 0, &perFrameData, 0, 0);
-	game->GetDeviceContext()->UpdateSubresource(shadowBuffer, 0, 0, &shadowData, 0, 0);
+	graphicsDevice->getDeviceContext()->UpdateSubresource(perFrameBuffer, 0, 0, &perFrameData, 0, 0);
+	graphicsDevice->getDeviceContext()->UpdateSubresource(shadowBuffer, 0, 0, &shadowData, 0, 0);
 
-	shadowMap->BindDSVAndSetNullRenderTarget(game->GetDeviceContext());
+	shadowMap->BindDSVAndSetNullRenderTarget(graphicsDevice);
 }
 
 NS_END

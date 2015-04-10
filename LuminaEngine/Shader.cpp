@@ -35,17 +35,30 @@ bool Shader::LoadShader(wchar_t* filepath, ShaderType type, ID3D11Device* dev)
 	if (hr != S_OK)
 		return false;
 
-	HRESULT temp;
+	D3D11_SO_DECLARATION_ENTRY pVDecl[] =
+	{
+		{ 0, "POSITION", 0, 0, 3, 0 },
+		{ 0, "TEXCOORD", 0, 0, 3, 0 },
+		{ 0, "TEXCOORD", 1, 0, 2, 0 },
+		{ 0, "TEXCOORD", 2, 0, 1, 0 },
+		{ 0, "TEXCOORD", 3, 0, 1, 0 },
+	};
+
+	UINT strides = 0;
+
 	switch (type)
 	{
 	case Vert:
-		temp = dev->CreateVertexShader(fileToBlob->GetBufferPointer(), fileToBlob->GetBufferSize(), NULL, &vert);
+		dev->CreateVertexShader(fileToBlob->GetBufferPointer(), fileToBlob->GetBufferSize(), NULL, &vert);
 		break;
 	case Pixel:
 		dev->CreatePixelShader(fileToBlob->GetBufferPointer(), fileToBlob->GetBufferSize(), NULL, &pix);
 		break;
 	case Geometry:
 		dev->CreateGeometryShader(fileToBlob->GetBufferPointer(), fileToBlob->GetBufferSize(), NULL, &geo);
+		break;
+	case GeometrySO:
+		dev->CreateGeometryShaderWithStreamOutput(fileToBlob->GetBufferPointer(), fileToBlob->GetBufferSize(), pVDecl, 5, 0, 0, 0, 0, &geo);
 		break;
 	case Compute:
 		dev->CreateComputeShader(fileToBlob->GetBufferPointer(), fileToBlob->GetBufferSize(), NULL, &comp);
@@ -58,31 +71,40 @@ bool Shader::LoadShader(wchar_t* filepath, ShaderType type, ID3D11Device* dev)
 	return true;
 }
 
-void Shader::SetShader(ShaderType type, ID3D11DeviceContext* devCon)
+void Shader::BindShader(ShaderType type, ID3D11DeviceContext* devCon)
 {
 	switch (type)
 	{
 	case Vert:
-		if (vert)
+		//if (vert)
 			devCon->VSSetShader(vert, NULL, 0);
 		break;
 	case Pixel:
-		if (pix)
+		//if (pix)
 			devCon->PSSetShader(pix, NULL, 0);
 		break;
 	case Geometry:
-		if (geo)
+		//if (geo)
 			devCon->GSSetShader(geo, NULL, 0);
 		break;
 	case Compute:
-		if (comp)
+		//if (comp)
 			devCon->CSSetShader(comp, NULL, 0);
 		break;
 	case Domain:
-		if (dom)
+		//if (dom)
 			devCon->DSSetShader(dom, NULL, 0);
 		break;
 	}
+}
+
+void Shader::BindShader(ID3D11DeviceContext* devCon)
+{
+	devCon->VSSetShader(vert, NULL, 0);
+	devCon->PSSetShader(pix, NULL, 0);
+	devCon->GSSetShader(geo, NULL, 0);
+	devCon->CSSetShader(comp, NULL, 0);
+	devCon->DSSetShader(dom, NULL, 0);
 }
 
 bool Shader::CheckLoaded(ShaderType type)
@@ -112,6 +134,11 @@ bool Shader::CheckLoaded(ShaderType type)
 	}
 
 	return false;
+}
+
+void Shader::UnbindPixelShader(ID3D11DeviceContext* devCon)
+{
+	devCon->PSSetShader(0, 0, 0);
 }
 
 NS_END

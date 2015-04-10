@@ -57,27 +57,27 @@ float4 main(VertexOutput input) : SV_TARGET
 
 	// Unpack normal
 	float3 normalT = _NormalMap.Sample(_Sampler, float2(input.uv.x * tileU, input.uv.y * tileV));
-		normalT = 2.0f * normalT - 1.0f;
+	normalT = 2.0f * normalT - 1.0f;
 
 	// Calculate TBN
 	float3 N = input.normal;
-		float3 T = normalize(input.tangent - dot(input.tangent, N) *N);
-		float3 B = cross(N, T);
-		float3x3 TBN = float3x3(T, B, N);
-		float3 bumpedNormal = mul(normalT, TBN);
-		bumpedNormal = normalize(bumpedNormal);
+	float3 T = normalize(input.tangent - dot(input.tangent, N) *N);
+	float3 B = cross(N, T);
+	float3x3 TBN = float3x3(T, B, N);
+	float3 bumpedNormal = mul(normalT, TBN);
+	bumpedNormal = normalize(bumpedNormal);
 
 
 	// Calculate relation to camera for specularity and camera based effects
 	float distToEye = length(eyePos - input.worldpos);
 	float3 toEye = normalize(eyePos - input.worldpos);
 
-		// Create light values and set them to zero
-		float4 ambient = float4(0, 0, 0, 0);
-		float4 diffuse = float4(0, 0, 0, 0);
-		float4 spec = float4(0, 0, 0, 0);
+	// Create light values and set them to zero
+	float4 ambient = float4(0, 0, 0, 0);
+	float4 diffuse = float4(0, 0, 0, 0);
+	float4 spec = float4(0, 0, 0, 0);
 
-		float4 A, D, S;
+	float4 A, D, S;
 
 	///
 	// Lighting Calculations
@@ -129,7 +129,7 @@ float4 main(VertexOutput input) : SV_TARGET
 		float lightDepth = input.shadowpos[i].z;
 		for (int j = 0; j < 9; j++)
 		{
-			percentLit += _ShadowMap.SampleCmpLevelZero(_CmpSampler, input.shadowpos[i].xy + offsets[j], lightDepth - 0.005);
+			percentLit += _ShadowMap.SampleCmpLevelZero(_CmpSampler, input.shadowpos[i].xy + offsets[j], lightDepth - 0.0005);
 		}
 	}
 
@@ -138,11 +138,11 @@ float4 main(VertexOutput input) : SV_TARGET
 	// Sample texture(s)
 	float4 texColor = _Texture.Sample(_Sampler, float2(input.uv.x * tileU, input.uv.y * tileV));
 
-		// Calculate lit color based on lighting and shadow calculations
-		float4 litColor = texColor * (ambient + diffuse) * percentLit + spec * percentLit;
+	// Calculate lit color based on lighting and shadow calculations
+	float4 litColor = texColor * (ambient + diffuse) * percentLit + spec * percentLit;
 
-		// Pass through alpha values
-		litColor.a = lightMat.diffuse.a;
+	// Pass through alpha values
+	litColor.a = lightMat.diffuse.a;
 
 	//return float4(litColor.r, 1.0, litColor.b, 1.0);
 	return litColor;

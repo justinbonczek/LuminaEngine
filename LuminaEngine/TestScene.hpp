@@ -7,9 +7,9 @@ class TestScene : public Lumina::Scene
 {
 public:
 	// Overrided functions from Scene
-	void LoadAssets(Lumina::Window& window);
+	void LoadAssets();
 	void Update(float dt);
-	void Draw(Lumina::Window& window);
+	void Draw();
 private:
 	// TestScene stuff
 	Lumina::Camera camera;

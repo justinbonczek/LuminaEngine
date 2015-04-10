@@ -12,7 +12,7 @@
 #include <chrono>
 #include "Config.hpp"
 
-typedef std::chrono::time_point<std::chrono::system_clock> time_point;
+typedef std::chrono::system_clock::time_point time_point;
 
 NS_BEGIN
 class Timer

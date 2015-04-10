@@ -122,14 +122,14 @@ void ShadowMap::SetSRVToShaders(ID3D11DeviceContext* devCon)
 	devCon->PSSetShaderResources(3, 1, &shadowMap);
 }
 
-void ShadowMap::BindDSVAndSetNullRenderTarget(ID3D11DeviceContext* devCon)
+void ShadowMap::BindDSVAndSetNullRenderTarget(GraphicsDevice* graphicsDevice)
 {
-	devCon->RSSetViewports(1, &viewport);
+	graphicsDevice->getDeviceContext()->RSSetViewports(1, &viewport);
 
 	ID3D11RenderTargetView* renderTargets[1] = { 0 };
-	devCon->OMSetRenderTargets(1, renderTargets, dsv);
+	graphicsDevice->getDeviceContext()->OMSetRenderTargets(1, renderTargets, dsv);
 
-	devCon->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	graphicsDevice->getDeviceContext()->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void ShadowMap::UpdateViewProjMatrix()
@@ -145,8 +145,7 @@ void ShadowMap::UpdateViewProjMatrix()
 			lightDirection,
 			XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)));
 
-		//XMStoreFloat4x4(&projection, XMMatrixPerspectiveFovLH(0.25f * PI, height / width, 0.1f, 100.0f));
-		XMStoreFloat4x4(&projection, XMMatrixOrthographicLH(30.0f, 30.0f, 0.1f, 100.0));
+		XMStoreFloat4x4(&projection, XMMatrixOrthographicLH(100.0f, 100.0f, 0.1f, 200.0));
 	}
 	else if (PointLight* p = dynamic_cast<PointLight*>(light))
 	{
@@ -163,7 +162,7 @@ void ShadowMap::UpdateViewProjMatrix()
 			XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)));
 
 		//XMStoreFloat4x4(&projection, XMMatrixPerspectiveFovLH(0.25f * PI, height / width, 0.1f, 100.0f));
-		XMStoreFloat4x4(&projection, XMMatrixOrthographicLH(30.0f, 30.0f, 0.1f, 100.0));
+		XMStoreFloat4x4(&projection, XMMatrixOrthographicLH(100.0f, 100.0f, 0.1f, 200.0));
 	}
 	else
 	{
@@ -197,7 +196,7 @@ XMFLOAT4X4 ShadowMap::GetProjectionMatrixTranspose()
 
 float ShadowMap::GetResolution()
 {
-	return width;
+	return (float)width;
 }
 
 ID3D11ShaderResourceView* ShadowMap::GetDepthMapSrv()

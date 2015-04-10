@@ -8,8 +8,7 @@
 
 #include "Config.hpp"
 #include "Mesh.hpp"
-#include "Window.hpp"
-
+#include "GraphicsDevice.hpp"
 NS_BEGIN
 class Camera
 {
@@ -20,7 +19,7 @@ public:
 	/// <summary>
 	/// Sets up initial values for camera
 	/// </summary>
-	void Initialize(Lumina::Window& window);
+	void Initialize(Lumina::GraphicsDevice graphicsDevice);
 
 	///
 	// Gets and sets to access and change camera information
