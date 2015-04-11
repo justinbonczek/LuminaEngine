@@ -153,7 +153,7 @@ void Scene::DrawScene()
 	for (GameObject* n : objs)
 	{
 		UpdateObjectData(*n);
-		n->Draw(graphicsDevice->getDeviceContext());
+		n->Draw(graphicsDevice);
 	}
 
 	// Render Particles
@@ -163,7 +163,7 @@ void Scene::DrawScene()
 	for (ParticleEmitter* p : particles)
 	{
 		UpdateParticleObjectData(p);
-		p->Draw(graphicsDevice->getDeviceContext());
+		p->Draw(graphicsDevice);
 	}
 }
 
@@ -179,7 +179,7 @@ void Scene::UpdateFrameData()
 
 	for (int i = 0; i < shadowData.numSM; i++)
 	{
-		shadowMaps[i]->SetSRVToShaders(graphicsDevice->getDeviceContext());
+		shadowMaps[i]->SetSRVToShaders(graphicsDevice);
 	}
 
 	graphicsDevice->getDeviceContext()->UpdateSubresource(perFrameBuffer, 0, 0, &perFrameData, 0, 0);
@@ -248,20 +248,20 @@ void Scene::AddLight(SpotLight* light)
 
 void Scene::AddShadowMap(DirectionalLight* light)
 {
-	shadowMaps[shadowData.numSM] = new ShadowMap(light, graphicsDevice->getDevice());
+	shadowMaps[shadowData.numSM] = new ShadowMap(light, graphicsDevice);
 	shadowData.numSM++;
 }
 
 void Scene::AddShadowMap(PointLight* light)
 {
 	// TODO: FUN CUBEMAPPING STUFF HERE
-	shadowMaps[shadowData.numSM] = new ShadowMap(light, graphicsDevice->getDevice());
+	shadowMaps[shadowData.numSM] = new ShadowMap(light, graphicsDevice);
 	shadowData.numSM++;
 }
 
 void Scene::AddShadowMap(SpotLight* light)
 {
-	shadowMaps[shadowData.numSM] = new ShadowMap(light, graphicsDevice->getDevice());
+	shadowMaps[shadowData.numSM] = new ShadowMap(light, graphicsDevice);
 	shadowData.numSM++;
 }
 
@@ -286,7 +286,7 @@ void Scene::CalculateShadows()
 		for (GameObject* obj : objs)
 		{
 			UpdateObjectData(*obj);
-			obj->Draw(graphicsDevice->getDeviceContext());
+			obj->Draw(graphicsDevice);
 		}
 	}
 

@@ -4,9 +4,9 @@
 
 NS_BEGIN
 
-Texture2D::Texture2D(wchar_t* filepath, ID3D11Device* dev)
+Texture2D::Texture2D(wchar_t* filepath, GraphicsDevice* graphicsDevice)
 {
-	CreateWICTextureFromFile(dev, filepath, 0, &srv);
+	CreateWICTextureFromFile(graphicsDevice->getDevice(), filepath, 0, &srv);
 	if (!srv)
 	{
 		printf("Failed to load texture: "); printf((char *)filepath); printf("\n");
@@ -18,21 +18,21 @@ Texture2D::~Texture2D()
 	DELETECOM(srv);
 }
 
-void Texture2D::BindTexture(ID3D11DeviceContext* devCon)
+void Texture2D::BindTexture(GraphicsDevice* graphicsDevice)
 {
 	if (srv)
 	{
-		devCon->VSSetShaderResources(0, 1, &srv);
-		devCon->PSSetShaderResources(0, 1, &srv);
+		graphicsDevice->getDeviceContext()->VSSetShaderResources(0, 1, &srv);
+		graphicsDevice->getDeviceContext()->PSSetShaderResources(0, 1, &srv);
 	}
 }
 
-void Texture2D::BindTexture(UINT index, ID3D11DeviceContext* devCon)
+void Texture2D::BindTexture(UINT index, GraphicsDevice* graphicsDevice)
 {
 	if (srv)
 	{
-		devCon->VSSetShaderResources(index, 1, &srv);
-		devCon->PSSetShaderResources(index, 1, &srv);
+		graphicsDevice->getDeviceContext()->VSSetShaderResources(index, 1, &srv);
+		graphicsDevice->getDeviceContext()->PSSetShaderResources(index, 1, &srv);
 	}
 }
 

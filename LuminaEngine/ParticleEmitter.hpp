@@ -35,12 +35,12 @@ struct EmitterData
 class ParticleEmitter : public GameObject
 {
 public:
-	ParticleEmitter(UINT maxParticles, Texture2D texture, BlendType blendType, ID3D11Device* dev);
-	ParticleEmitter(UINT maxParticles, wchar_t* filepath, BlendType blendType, ID3D11Device* dev);
+	ParticleEmitter(UINT maxParticles, Texture2D texture, BlendType blendType, GraphicsDevice* graphicsDevice);
+	ParticleEmitter(UINT maxParticles, wchar_t* filepath, BlendType blendType, GraphicsDevice* graphicsDevice);
 	~ParticleEmitter();
 
 	void Update(float dt);
-	void Draw(ID3D11DeviceContext* devCon);
+	void Draw(GraphicsDevice* graphicsDevice);
 
 	void Reset();
 

@@ -27,7 +27,7 @@ public:
 	/// <summary>
 	/// Called by Graphics Manager when the window is resized
 	/// </summary>
-	void OnResize();
+	void OnResize(LPARAM lParam);
 
 	float getAspectRatio(void)const;
 	bool getOpen(void)const;

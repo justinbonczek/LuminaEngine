@@ -2,6 +2,7 @@
 #define SAMPLER_HPP
 
 #include "Config.hpp"
+#include "GraphicsDevice.hpp"
 
 NS_BEGIN
 
@@ -31,12 +32,12 @@ enum ComparisonType
 class SamplerState
 {
 public:
-	SamplerState(ID3D11Device* dev);
-	SamplerState(FilterType fType, AddressType aType, ID3D11Device* dev);
+	SamplerState(GraphicsDevice* graphicsDevice);
+	SamplerState(FilterType fType, AddressType aType, GraphicsDevice* graphicsDevice);
 	~SamplerState();
 
-	void BindSampler(ID3D11DeviceContext* devCon);
-	void BindSampler(UINT index, ID3D11DeviceContext* devCon);
+	void BindSampler(GraphicsDevice* graphicsDevice);
+	void BindSampler(UINT index, GraphicsDevice* graphicsDevice);
 
 	ID3D11SamplerState* Sampler();
 private:

@@ -31,3 +31,7 @@ LuminaEngine/Debug/*
 *.exe
 *.out
 *.app
+
+# Log files
+*.tlog
+*.log

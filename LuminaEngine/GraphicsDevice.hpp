@@ -21,7 +21,6 @@ public:
 	void Clear(const float color[4]);
 
 	void Display();
-
 	void BindBackBuffer();
 
 	ID3D11Device* getDevice();

@@ -73,32 +73,32 @@ void GameObject::Update(float dt)
 	XMStoreFloat4x4(&worldMat, scaleM * rotationX * rotationY * rotationZ * translation);
 }
 
-void GameObject::Draw(ID3D11DeviceContext* devCon)
+void GameObject::Draw(GraphicsDevice* graphicsDevice)
 {
 	// TODO: SHADOW PASS OPTIMIZATION
 	if (!shadowPass)
-		mat->BindShader(devCon);
+		mat->BindShader(graphicsDevice);
 	else
 	{
-		mat->BindShader(devCon);
-		mat->UnbindPixelShader(devCon);
+		mat->BindShader(graphicsDevice);
+		mat->UnbindPixelShader(graphicsDevice);
 	}
 
-	mat->BindSampler(devCon);
-	mat->BindSRV(devCon);
-	mat->BindBlendState(devCon);
+	mat->BindSampler(graphicsDevice);
+	mat->BindSRV(graphicsDevice);
+	mat->BindBlendState(graphicsDevice);
 
 	if (mesh->VBuffer())
 	{
 		ID3D11Buffer* vBuffer = mesh->VBuffer();
-		devCon->IASetVertexBuffers(0, 1, &vBuffer, &stride, &offset);
+		graphicsDevice->getDeviceContext()->IASetVertexBuffers(0, 1, &vBuffer, &stride, &offset);
 	}
 	if (mesh->IBuffer())
 	{
-		devCon->IASetIndexBuffer(mesh->IBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		graphicsDevice->getDeviceContext()->IASetIndexBuffer(mesh->IBuffer(), DXGI_FORMAT_R32_UINT, 0);
 	}
 
-	devCon->DrawIndexed(mesh->GetNumIndices(), 0, 0);
+	graphicsDevice->getDeviceContext()->DrawIndexed(mesh->GetNumIndices(), 0, 0);
 }
 
 void GameObject::SetPosition(XMFLOAT3 newPosition)
@@ -145,9 +145,9 @@ XMFLOAT4X4 GameObject::WorldInverseTranspose(void)
 	return temp;
 }
 
-void GameObject::LoadTexture(wchar_t* filepath, ID3D11Device* dev)
+void GameObject::LoadTexture(wchar_t* filepath, GraphicsDevice* graphicsDevice)
 {
-	mat->LoadTexture(filepath, dev);
+	mat->LoadTexture(filepath, graphicsDevice);
 }
 
 void GameObject::SetShader(Shader* shader)
@@ -155,9 +155,9 @@ void GameObject::SetShader(Shader* shader)
 	mat->SetShader(shader);
 }
 
-void GameObject::SetShader(wchar_t* filepath, ShaderType type, ID3D11Device* dev)
+void GameObject::SetShader(wchar_t* filepath, ShaderType type, GraphicsDevice* graphicsDevice)
 {
-	mat->SetShader(filepath, type, dev);
+	mat->SetShader(filepath, type, graphicsDevice);
 }
 
 LightMaterial GameObject::LightMaterial(void)

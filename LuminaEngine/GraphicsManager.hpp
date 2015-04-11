@@ -15,7 +15,9 @@ public:
 	bool Initialize(UINT windowWidth = 800, UINT windowHeight = 600, std::wstring windowTitle = L"Windows Application");
 	void Clear();
 	void Display();
-	void OnResize();
+
+	void OnSize(LPARAM lParam);
+	void OnResizeExit();
 
 	GraphicsDevice* getActiveDevice();
 private:

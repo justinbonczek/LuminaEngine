@@ -2,6 +2,7 @@
 #define BLENDSTATE_HPP
 
 #include "Config.hpp"
+#include "GraphicsDevice.hpp"
 
 NS_BEGIN
 
@@ -16,13 +17,13 @@ enum BlendType
 class BlendState
 {
 public:
-	BlendState(BlendType blendType, ID3D11Device* dev);
+	BlendState(BlendType blendType, GraphicsDevice* graphicsDevice);
 	~BlendState();
 
 	/// <summary>
 	///
 	/// </summary>
-	void BindBlendState(ID3D11DeviceContext* devCon);
+	void BindBlendState(GraphicsDevice* graphicsDevice);
 
 private:
 	ID3D11BlendState* blendState;

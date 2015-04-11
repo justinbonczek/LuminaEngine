@@ -19,7 +19,7 @@ public:
 	/// <summary>
 	/// Sets up initial values for camera
 	/// </summary>
-	void Initialize(Lumina::GraphicsDevice graphicsDevice);
+	void Initialize(GraphicsDevice* graphicsDevice);
 
 	///
 	// Gets and sets to access and change camera information

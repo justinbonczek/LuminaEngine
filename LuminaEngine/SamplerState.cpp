@@ -3,7 +3,7 @@
 NS_BEGIN
 
 
-SamplerState::SamplerState(ID3D11Device* dev)
+SamplerState::SamplerState(GraphicsDevice* graphicsDevice)
 {
 	D3D11_SAMPLER_DESC wsd;
 	ZeroMemory(&wsd, sizeof(D3D11_SAMPLER_DESC));
@@ -16,10 +16,10 @@ SamplerState::SamplerState(ID3D11Device* dev)
 	wsd.MinLOD = 0;
 	wsd.MaxLOD = 0;
 	wsd.MipLODBias = 0;
-	dev->CreateSamplerState(&wsd, &sampler);
+	graphicsDevice->getDevice()->CreateSamplerState(&wsd, &sampler);
 }
 
-SamplerState::SamplerState(FilterType fType, AddressType aType, ID3D11Device* dev)
+SamplerState::SamplerState(FilterType fType, AddressType aType, GraphicsDevice* graphicsDevice)
 {
 	D3D11_SAMPLER_DESC wsd;
 	ZeroMemory(&wsd, sizeof(D3D11_SAMPLER_DESC));
@@ -54,7 +54,7 @@ SamplerState::SamplerState(FilterType fType, AddressType aType, ID3D11Device* de
 	wsd.MinLOD = 0;
 	wsd.MaxLOD = 0;
 	wsd.MipLODBias = 0;
-	dev->CreateSamplerState(&wsd, &sampler);
+	graphicsDevice->getDevice()->CreateSamplerState(&wsd, &sampler);
 }
 
 SamplerState::~SamplerState()
@@ -62,21 +62,21 @@ SamplerState::~SamplerState()
 	delete sampler;
 }
 
-void SamplerState::BindSampler(ID3D11DeviceContext* devCon)
+void SamplerState::BindSampler(GraphicsDevice* graphicsDevice)
 {
 	if (sampler)
 	{
-		devCon->VSSetSamplers(0, 1, &sampler);
-		devCon->PSSetSamplers(0, 1, &sampler);
+		graphicsDevice->getDeviceContext()->VSSetSamplers(0, 1, &sampler);
+		graphicsDevice->getDeviceContext()->PSSetSamplers(0, 1, &sampler);
 	}
 }
 
-void SamplerState::BindSampler(UINT index, ID3D11DeviceContext* devCon)
+void SamplerState::BindSampler(UINT index, GraphicsDevice* graphicsDevice)
 {
 	if (sampler)
 	{
-		devCon->VSSetSamplers(index, 1, &sampler);
-		devCon->PSSetSamplers(index, 1, &sampler);
+		graphicsDevice->getDeviceContext()->VSSetSamplers(index, 1, &sampler);
+		graphicsDevice->getDeviceContext()->PSSetSamplers(index, 1, &sampler);
 	}
 }
 

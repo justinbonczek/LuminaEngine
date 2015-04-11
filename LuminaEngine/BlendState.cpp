@@ -2,7 +2,7 @@
 
 NS_BEGIN
 
-BlendState::BlendState(BlendType blendType, ID3D11Device* dev)
+BlendState::BlendState(BlendType blendType, GraphicsDevice* graphicsDevice)
 {
 	D3D11_BLEND_DESC bd;
 	ZeroMemory(&bd, sizeof(D3D11_BLEND_DESC));
@@ -47,7 +47,7 @@ BlendState::BlendState(BlendType blendType, ID3D11Device* dev)
 		break;
 	}
 
-	dev->CreateBlendState(&bd, &blendState);
+	graphicsDevice->getDevice()->CreateBlendState(&bd, &blendState);
 
 }
 
@@ -56,10 +56,10 @@ BlendState::~BlendState()
 	DELETECOM(blendState)
 }
 
-void BlendState::BindBlendState(ID3D11DeviceContext* devCon)
+void BlendState::BindBlendState(GraphicsDevice* graphicsDevice)
 {
 	float blendFactors[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	devCon->OMSetBlendState(blendState, blendFactors, 0xFFFFFF);
+	graphicsDevice->getDeviceContext()->OMSetBlendState(blendState, blendFactors, 0xFFFFFF);
 }
 
 NS_END

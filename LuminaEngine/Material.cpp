@@ -3,8 +3,8 @@
 #include "Window.hpp"
 
 NS_BEGIN
-Material::Material(ID3D11Device* dev) :
-blendState(Transparency, dev)
+Material::Material(GraphicsDevice* graphicsDevice) :
+blendState(Transparency, graphicsDevice)
 {
 	tileUV[0] = 1;
 	tileUV[1] = 1;
@@ -19,11 +19,11 @@ blendState(Transparency, dev)
 	wsd.MinLOD = 0;
 	wsd.MaxLOD = 0;
 	wsd.MipLODBias = 0;
-	dev->CreateSamplerState(&wsd, &sampler);
+	graphicsDevice->getDevice()->CreateSamplerState(&wsd, &sampler);
 }
 
-Material::Material(BlendType blendType, ID3D11Device* dev):
-blendState(blendType, dev)
+Material::Material(BlendType blendType, GraphicsDevice* graphicsDevice) :
+blendState(blendType, graphicsDevice)
 {
 	tileUV[0] = 1;
 	tileUV[1] = 1;
@@ -38,14 +38,14 @@ blendState(blendType, dev)
 	wsd.MinLOD = 0;
 	wsd.MaxLOD = 0;
 	wsd.MipLODBias = 0;
-	dev->CreateSamplerState(&wsd, &sampler);
+	graphicsDevice->getDevice()->CreateSamplerState(&wsd, &sampler);
 
 	lightMat = new LightMaterial();
 }
 
 Material::Material(wchar_t* filepath, ID3D11SamplerState* sampler, GraphicsDevice* graphicsDevice) :
 sampler(sampler),
-blendState(Transparency, graphicsDevice->getDevice())
+blendState(Transparency, graphicsDevice)
 {
 	tileUV[0] = 1;
 	tileUV[1] = 1;
@@ -57,8 +57,8 @@ blendState(Transparency, graphicsDevice->getDevice())
 	shader = new Shader();
 }
 
-Material::Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, ID3D11Device* dev):
-blendState(Transparency, dev)
+Material::Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, GraphicsDevice* graphicsDevice) :
+blendState(Transparency, graphicsDevice)
 {
 	tileUV[0] = 1;
 	tileUV[1] = 1;
@@ -73,21 +73,21 @@ blendState(Transparency, dev)
 	wsd.MinLOD = 0;
 	wsd.MaxLOD = 0;
 	wsd.MipLODBias = 0;
-	dev->CreateSamplerState(&wsd, &sampler);
+	graphicsDevice->getDevice()->CreateSamplerState(&wsd, &sampler);
 
 	shader = new Shader();
-	shader->LoadShader(vertfilepath, Vert, dev);
-	shader->LoadShader(pixelfilepath, Pixel, dev);
+	shader->LoadShader(vertfilepath, Vert, graphicsDevice);
+	shader->LoadShader(pixelfilepath, Pixel, graphicsDevice);
 }
 
 Material::Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, ID3D11SamplerState* _sampler, GraphicsDevice* graphicsDevice) :
-blendState(Transparency, graphicsDevice->getDevice())
+blendState(Transparency, graphicsDevice)
 {
 	tileUV[0] = 1;
 	tileUV[1] = 1;
 	shader = new Shader();
-	shader->LoadShader(vertfilepath, Vert, graphicsDevice->getDevice());
-	shader->LoadShader(pixelfilepath, Pixel, graphicsDevice->getDevice());
+	shader->LoadShader(vertfilepath, Vert, graphicsDevice);
+	shader->LoadShader(pixelfilepath, Pixel, graphicsDevice);
 	sampler = _sampler;
 }
 
@@ -101,69 +101,69 @@ Material::~Material()
 	DELETECOM(sampler);
 }
 
-void Material::BindSRV(ID3D11DeviceContext* devCon)
+void Material::BindSRV(GraphicsDevice* graphicsDevice)
 {
 	if (srv)
 	{
-		devCon->VSSetShaderResources(0, 1, &srv);
-		devCon->PSSetShaderResources(0, 1, &srv);
+		graphicsDevice->getDeviceContext()->VSSetShaderResources(0, 1, &srv);
+		graphicsDevice->getDeviceContext()->PSSetShaderResources(0, 1, &srv);
 	}
 	if (normalSrv)
 	{
-		devCon->VSSetShaderResources(1, 1, &normalSrv);
-		devCon->PSSetShaderResources(1, 1, &normalSrv);
+		graphicsDevice->getDeviceContext()->VSSetShaderResources(1, 1, &normalSrv);
+		graphicsDevice->getDeviceContext()->PSSetShaderResources(1, 1, &normalSrv);
 	}
 }
 
-void Material::BindSRV(UINT index, ID3D11DeviceContext* devCon)
+void Material::BindSRV(UINT index, GraphicsDevice* graphicsDevice)
 {
 	if (srv)
 	{
-		devCon->VSSetShaderResources(index, 1, &srv);
-		devCon->PSSetShaderResources(index, 1, &srv);
+		graphicsDevice->getDeviceContext()->VSSetShaderResources(index, 1, &srv);
+		graphicsDevice->getDeviceContext()->PSSetShaderResources(index, 1, &srv);
 	}
 }
 
-void Material::BindShader(ID3D11DeviceContext* devCon)
+void Material::BindShader(GraphicsDevice* graphicsDevice)
 {
-	shader->BindShader(Vert, devCon);
-	shader->BindShader(Pixel, devCon);
-	shader->BindShader(Geometry, devCon);
-	shader->BindShader(Compute, devCon);
-	shader->BindShader(Domain, devCon);
+	shader->BindShader(Vert, graphicsDevice);
+	shader->BindShader(Pixel, graphicsDevice);
+	shader->BindShader(Geometry, graphicsDevice);
+	shader->BindShader(Compute, graphicsDevice);
+	shader->BindShader(Domain, graphicsDevice);
 }
 
-void Material::UnbindPixelShader(ID3D11DeviceContext* devCon)
+void Material::UnbindPixelShader(GraphicsDevice* graphicsDevice)
 {
-	shader->UnbindPixelShader(devCon);
+	shader->UnbindPixelShader(graphicsDevice);
 }
 
-void Material::BindSampler(ID3D11DeviceContext* devCon)
+void Material::BindSampler(GraphicsDevice* graphicsDevice)
 {
 	if (sampler)
 	{
-		devCon->VSSetSamplers(0, 1, &sampler);
-		devCon->PSSetSamplers(0, 1, &sampler);
+		graphicsDevice->getDeviceContext()->VSSetSamplers(0, 1, &sampler);
+		graphicsDevice->getDeviceContext()->PSSetSamplers(0, 1, &sampler);
 	}
 }
 
-void Material::BindBlendState(ID3D11DeviceContext* devCon)
+void Material::BindBlendState(GraphicsDevice* graphicsDevice)
 {
-	blendState.BindBlendState(devCon);
+	blendState.BindBlendState(graphicsDevice);
 }
 
-void Material::LoadTexture(wchar_t* texturefilepath, ID3D11Device* dev)
+void Material::LoadTexture(wchar_t* texturefilepath, GraphicsDevice* graphicsDevice)
 {
-	CreateWICTextureFromFile(dev, texturefilepath, 0, &srv);
+	CreateWICTextureFromFile(graphicsDevice->getDevice(), texturefilepath, 0, &srv);
 	if (!srv)
 	{
 		printf("Failed to load texture: "); printf((char *)texturefilepath); printf("\n");
 	}
 }
 
-void Material::LoadNormal(wchar_t* texturefilepath, ID3D11Device* dev)
+void Material::LoadNormal(wchar_t* texturefilepath, GraphicsDevice* graphicsDevice)
 {
-	CreateWICTextureFromFile(dev, texturefilepath, 0, &normalSrv);
+	CreateWICTextureFromFile(graphicsDevice->getDevice(), texturefilepath, 0, &normalSrv);
 	if (!srv)
 	{
 		printf("Failed to load texture: "); printf((char *)texturefilepath); printf("\n");
@@ -175,9 +175,9 @@ void Material::SetShader(Shader* shader)
 	this->shader = shader;
 }
 
-void Material::SetShader(wchar_t* filepath, ShaderType type, ID3D11Device* dev)
+void Material::SetShader(wchar_t* filepath, ShaderType type, GraphicsDevice* graphicsDevice)
 {
-	shader->LoadShader(filepath, type, dev);
+	shader->LoadShader(filepath, type, graphicsDevice);
 }
 
 void Material::SetLightMaterial(LightMaterial* _lightMat)

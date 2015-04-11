@@ -80,9 +80,10 @@ void Window::Close(void)
 	Window::~Window();
 }
 
-void Window::OnResize()
+void Window::OnResize(LPARAM lParam)
 {
-
+	windowWidth = LOWORD(lParam);
+	windowHeight = HIWORD(lParam);
 }
 
 float Window::getAspectRatio(void)const

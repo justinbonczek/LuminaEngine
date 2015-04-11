@@ -39,9 +39,14 @@ void GraphicsManager::Display()
 	graphicsDevice.Display();
 }
 
-void GraphicsManager::OnResize()
+void GraphicsManager::OnSize(LPARAM lParam)
 {
-	window.OnResize();
+	window.OnResize(lParam);
+	graphicsDevice.OnResize(window);
+}
+
+void GraphicsManager::OnResizeExit()
+{
 	graphicsDevice.OnResize(window);
 }
 

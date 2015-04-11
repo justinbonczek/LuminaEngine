@@ -2,7 +2,7 @@
 
 NS_BEGIN
 
-ShadowMap::ShadowMap(DirectionalLight* light, ID3D11Device* dev, UINT width, UINT height) :
+ShadowMap::ShadowMap(DirectionalLight* light, GraphicsDevice* graphicsDevice, UINT width, UINT height) :
 dsv(0),
 shadowMap(0),
 width(width),
@@ -31,7 +31,7 @@ light(light)
 	td.MiscFlags = 0;
 
 	ID3D11Texture2D* depthMap = 0;
-	dev->CreateTexture2D(&td, 0, &depthMap);
+	graphicsDevice->getDevice()->CreateTexture2D(&td, 0, &depthMap);
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
 	ZeroMemory(&dsvd, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
@@ -40,7 +40,7 @@ light(light)
 	dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvd.Texture2D.MipSlice = 0;
 
-	dev->CreateDepthStencilView(depthMap, &dsvd, &dsv);
+	graphicsDevice->getDevice()->CreateDepthStencilView(depthMap, &dsvd, &dsv);
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 	ZeroMemory(&srvd, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
@@ -48,18 +48,18 @@ light(light)
 	srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvd.Texture2D.MipLevels = td.MipLevels;
 	srvd.Texture2D.MostDetailedMip = 0;
-	dev->CreateShaderResourceView(depthMap, &srvd, &shadowMap);
+	graphicsDevice->getDevice()->CreateShaderResourceView(depthMap, &srvd, &shadowMap);
 
 	DELETECOM(depthMap);
 }
 
-ShadowMap::ShadowMap(PointLight* light, ID3D11Device* dev, UINT width, UINT height) :
+ShadowMap::ShadowMap(PointLight* light, GraphicsDevice* graphicsDevice, UINT width, UINT height) :
 light(light)
 {
 
 }
 
-ShadowMap::ShadowMap(SpotLight* light, ID3D11Device* dev, UINT width, UINT height) :
+ShadowMap::ShadowMap(SpotLight* light, GraphicsDevice* graphicsDevice, UINT width, UINT height) :
 dsv(0),
 shadowMap(0),
 width(width),
@@ -88,7 +88,7 @@ light(light)
 	td.MiscFlags = 0;
 	
 	ID3D11Texture2D* depthMap = 0;
-	dev->CreateTexture2D(&td, 0, &depthMap);
+	graphicsDevice->getDevice()->CreateTexture2D(&td, 0, &depthMap);
 	
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
 	ZeroMemory(&dsvd, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
@@ -97,7 +97,7 @@ light(light)
 	dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvd.Texture2D.MipSlice = 0;
 	
-	dev->CreateDepthStencilView(depthMap, &dsvd, &dsv);
+	graphicsDevice->getDevice()->CreateDepthStencilView(depthMap, &dsvd, &dsv);
 	
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 	ZeroMemory(&srvd, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
@@ -105,7 +105,7 @@ light(light)
 	srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvd.Texture2D.MipLevels = td.MipLevels;
 	srvd.Texture2D.MostDetailedMip = 0;
-	dev->CreateShaderResourceView(depthMap, &srvd, &shadowMap);
+	graphicsDevice->getDevice()->CreateShaderResourceView(depthMap, &srvd, &shadowMap);
 	
 	DELETECOM(depthMap);
 }
@@ -116,10 +116,10 @@ ShadowMap::~ShadowMap()
 	DELETECOM(dsv);
 }
 
-void ShadowMap::SetSRVToShaders(ID3D11DeviceContext* devCon)
+void ShadowMap::SetSRVToShaders(GraphicsDevice* graphicsDevice)
 {
-	devCon->VSSetShaderResources(3, 1, &shadowMap);
-	devCon->PSSetShaderResources(3, 1, &shadowMap);
+	graphicsDevice->getDeviceContext()->VSSetShaderResources(3, 1, &shadowMap);
+	graphicsDevice->getDeviceContext()->PSSetShaderResources(3, 1, &shadowMap);
 }
 
 void ShadowMap::BindDSVAndSetNullRenderTarget(GraphicsDevice* graphicsDevice)

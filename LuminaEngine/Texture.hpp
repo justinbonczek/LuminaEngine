@@ -2,17 +2,18 @@
 #define TEXTURE_HPP
 
 #include "Config.hpp"
+#include "GraphicsDevice.hpp"
 
 NS_BEGIN
 
 class Texture2D
 {
 public:
-	Texture2D(wchar_t* filepath, ID3D11Device* dev);
+	Texture2D(wchar_t* filepath, GraphicsDevice* graphicsDevice);
 	~Texture2D();
 
-	void BindTexture(ID3D11DeviceContext* devCon);
-	void BindTexture(UINT index, ID3D11DeviceContext* devCon);
+	void BindTexture(GraphicsDevice* graphicsDevice);
+	void BindTexture(UINT index, GraphicsDevice* graphicsDevice);
 private:
 	ID3D11ShaderResourceView* srv;
 };

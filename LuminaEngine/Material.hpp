@@ -21,8 +21,8 @@ struct LightMaterial
 class Material
 {
 public:
-	Material(ID3D11Device* dev);
-	Material(BlendType blendType, ID3D11Device* dev);
+	Material(GraphicsDevice* graphicsDevice);
+	Material(BlendType blendType, GraphicsDevice* graphicsDevice);
 	/// <summary>
 	/// Uses the filepath of a texture to create a material
 	/// </summary>
@@ -33,41 +33,41 @@ public:
 	/// <summary>
 	/// Uses the filepath of a vertex and a pixel shader to create a material
 	/// </summary>
-	Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, ID3D11Device* dev);
+	Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, GraphicsDevice* graphicsDevice);
 	Material(wchar_t* vertfilepath, wchar_t* pixelfilepath, ID3D11SamplerState* _sampler, GraphicsDevice* graphicsDevice);
 
 	/// <summary>
 	/// Binds the material's shader resource to the pipeline
 	/// </summary>
-	void BindSRV(ID3D11DeviceContext* devCon);
-	void BindSRV(UINT index, ID3D11DeviceContext* devCon);
+	void BindSRV(GraphicsDevice* graphicsDevice);
+	void BindSRV(UINT index, GraphicsDevice* graphicsDevice);
 
 	/// <summary>
 	/// Binds the material's shader to the pipeline
 	/// </summary>
-	void BindShader(ID3D11DeviceContext* devCon);
+	void BindShader(GraphicsDevice* graphicsDevice);
 
-	void UnbindPixelShader(ID3D11DeviceContext* devCon);
+	void UnbindPixelShader(GraphicsDevice* graphicsDevice);
 
 	/// <summary>
 	/// Binds the material's sampler to the pipeline
 	/// </summary>
-	void BindSampler(ID3D11DeviceContext* devCon);
+	void BindSampler(GraphicsDevice* graphicsDevice);
 
-	void BindBlendState(ID3D11DeviceContext* devCon);
+	void BindBlendState(GraphicsDevice* graphicsDevice);
 
 	/// <summary>
 	/// Loads a texture from the file and stores it into the srv
 	/// </summary>
-	void LoadTexture(wchar_t* texturefilepath, ID3D11Device* dev);
+	void LoadTexture(wchar_t* texturefilepath, GraphicsDevice* graphicsDevice);
 
 	/// <summary>
 	/// Loads a normal map from the file and stores it
 	/// </summary>
-	void LoadNormal(wchar_t* texturefilepath, ID3D11Device *dev);
+	void LoadNormal(wchar_t* texturefilepath, GraphicsDevice* graphicsDevice);
 
 	void SetShader(Shader* shader);
-	void SetShader(wchar_t* filepath, ShaderType type, ID3D11Device* dev);
+	void SetShader(wchar_t* filepath, ShaderType type, GraphicsDevice* graphicsDevice);
 	
 	/// <summary>
 	/// Sets the material's light-interaction values

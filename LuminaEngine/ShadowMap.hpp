@@ -11,14 +11,14 @@ class ShadowMap
 {
 public:
 	//ShadowMap(DirectionalLight* light, ID3D11Device* dev, UINT width = SHADOWMAPRESOLUTION, UINT height = SHADOWMAPRESOLUTION);
-	ShadowMap(DirectionalLight* light, ID3D11Device* dev, UINT width = SHADOWMAPRESOLUTION, UINT height = SHADOWMAPRESOLUTION);
-	ShadowMap(PointLight* light, ID3D11Device* dev, UINT width = SHADOWMAPRESOLUTION, UINT height = SHADOWMAPRESOLUTION);
-	ShadowMap(SpotLight* light, ID3D11Device* dev, UINT width = SHADOWMAPRESOLUTION, UINT height = SHADOWMAPRESOLUTION);	
+	ShadowMap(DirectionalLight* light, GraphicsDevice* graphicsDevice, UINT width = SHADOWMAPRESOLUTION, UINT height = SHADOWMAPRESOLUTION);
+	ShadowMap(PointLight* light, GraphicsDevice* graphicsDevice, UINT width = SHADOWMAPRESOLUTION, UINT height = SHADOWMAPRESOLUTION);
+	ShadowMap(SpotLight* light, GraphicsDevice* graphicsDevice, UINT width = SHADOWMAPRESOLUTION, UINT height = SHADOWMAPRESOLUTION);
 	~ShadowMap();
 
 	/// <summary>Set the shadowmap to the pixel shader for shadow calculations
 	/// </summary>
-	void SetSRVToShaders(ID3D11DeviceContext* devCon);
+	void SetSRVToShaders(GraphicsDevice* graphicsDevice);
 
 	/// <summary>Sets up the render target for shadowmap rendering
 	/// </summary>

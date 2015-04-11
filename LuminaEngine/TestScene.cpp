@@ -5,7 +5,7 @@ using namespace Lumina;
 
 void TestScene::LoadAssets()
 {
-	camera.Initialize(*graphicsDevice);
+	camera.Initialize(graphicsDevice);
 	SetActiveCamera(camera);
 
 	SpotLight* sLight = new SpotLight();
@@ -34,12 +34,12 @@ void TestScene::LoadAssets()
 	MeshGenerator::CreatePlane(500.0f, 500.0f, 2, 2, planeData);
 	Mesh* planeMesh = new Mesh(planeData, graphicsDevice);
 
-	Material* cubeMat = new Material(L"ShadowedVert.cso", L"ShadowedTexturedBumpedLitPix.cso",graphicsDevice->getDevice());
-	cubeMat->LoadTexture(L"content/Textures/brick.jpg", graphicsDevice->getDevice());
-	cubeMat->LoadNormal(L"content/Textures/brick_normal.jpg", graphicsDevice->getDevice());
+	Material* cubeMat = new Material(L"ShadowedVert.cso", L"ShadowedTexturedBumpedLitPix.cso",graphicsDevice);
+	cubeMat->LoadTexture(L"content/Textures/brick.jpg", graphicsDevice);
+	cubeMat->LoadNormal(L"content/Textures/brick_normal.jpg", graphicsDevice);
 	
-	Material* planeMat = new Material(L"ShadowedVert.cso", L"ShadowedTexturedLitPix.cso", graphicsDevice->getDevice());
-	planeMat->LoadTexture(L"content/Textures/tile.jpg", graphicsDevice->getDevice());
+	Material* planeMat = new Material(L"ShadowedVert.cso", L"ShadowedTexturedLitPix.cso", graphicsDevice);
+	planeMat->LoadTexture(L"content/Textures/tile.jpg", graphicsDevice);
 	planeMat->SetTextureTileUV(50);
 
 	LightMaterial* lightMat = new LightMaterial();
@@ -49,7 +49,7 @@ void TestScene::LoadAssets()
 	cubeMat->SetLightMaterial(lightMat);
 	planeMat->SetLightMaterial(lightMat);
 
-	ParticleEmitter* fireEmitter = new ParticleEmitter(1000, L"content/Textures/particle.png", Additive, graphicsDevice->getDevice());
+	ParticleEmitter* fireEmitter = new ParticleEmitter(1000, L"content/Textures/particle.png", Additive, graphicsDevice);
 	fireEmitter->SetPosition(0.0f, 0.0f, 0.0f);
 
 	GameObject* cube = new GameObject(cubeMesh, cubeMat);

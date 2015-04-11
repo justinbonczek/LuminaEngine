@@ -69,13 +69,13 @@ LRESULT Game::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_SIZE:
 		if (graphicsManager.getActiveDevice()->getDevice())
-			graphicsManager.OnResize();
+			graphicsManager.OnSize(lParam);
 		return 0;
 	case WM_ENTERSIZEMOVE:
 		return 0;
 	case WM_EXITSIZEMOVE:
 		if (graphicsManager.getActiveDevice()->getDevice())
-			graphicsManager.OnResize();
+			graphicsManager.OnResizeExit();
 		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);

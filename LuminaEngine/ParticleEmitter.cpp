@@ -5,19 +5,19 @@
 
 NS_BEGIN
 
-ParticleEmitter::ParticleEmitter(UINT maxParticles, Texture2D texture, BlendType blendType, ID3D11Device* dev) :
-blendState(blendType, dev),
-sampler(dev),
+ParticleEmitter::ParticleEmitter(UINT maxParticles, Texture2D texture, BlendType blendType, GraphicsDevice* graphicsDevice) :
+blendState(blendType, graphicsDevice),
+sampler(graphicsDevice),
 texture(texture),
 maxParticles(maxParticles),
 firstRun(true)
 {
-	streamOutShader.LoadShader(L"ParticleStreamVert.cso", Vert, dev);
-	streamOutShader.LoadShader(L"ParticleGenerationGeo.cso", GeometrySO, dev);
+	streamOutShader.LoadShader(L"ParticleStreamVert.cso", Vert, graphicsDevice);
+	streamOutShader.LoadShader(L"ParticleGenerationGeo.cso", GeometrySO, graphicsDevice);
 
-	drawShader.LoadShader(L"DrawParticleVert.cso", Vert, dev);
-	drawShader.LoadShader(L"ParticleBillboardGeo.cso", Geometry, dev);
-	drawShader.LoadShader(L"DrawParticlePix.cso", Pixel, dev);
+	drawShader.LoadShader(L"DrawParticleVert.cso", Vert, graphicsDevice);
+	drawShader.LoadShader(L"ParticleBillboardGeo.cso", Geometry, graphicsDevice);
+	drawShader.LoadShader(L"DrawParticlePix.cso", Pixel, graphicsDevice);
 
 	// Create index and vertex buffers from data
 	D3D11_BUFFER_DESC vb;
@@ -28,8 +28,8 @@ firstRun(true)
 	vb.CPUAccessFlags = 0;
 	vb.MiscFlags = 0;
 	vb.StructureByteStride = 0;
-	dev->CreateBuffer(&vb, 0, &streamBuffer);
-	dev->CreateBuffer(&vb, 0, &drawBuffer);
+	graphicsDevice->getDevice()->CreateBuffer(&vb, 0, &streamBuffer);
+	graphicsDevice->getDevice()->CreateBuffer(&vb, 0, &drawBuffer);
 
 	emitterParticle.initialPosition = XMFLOAT3(0.0, 0.0, 0.0);
 	emitterParticle.initialVelocity = XMFLOAT3(0.0, 1.0, 0.0);
@@ -39,7 +39,7 @@ firstRun(true)
 
 	D3D11_SUBRESOURCE_DATA srd;
 	srd.pSysMem = &emitterParticle;
-	dev->CreateBuffer(&vb, &srd, &initBuffer);
+	graphicsDevice->getDevice()->CreateBuffer(&vb, &srd, &initBuffer);
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
@@ -49,26 +49,26 @@ firstRun(true)
 	bd.MiscFlags = 0;
 	bd.StructureByteStride = 0;
 	bd.ByteWidth = sizeof(emitterData);
-	dev->CreateBuffer(&bd, 0, &particleBuffer);
+	graphicsDevice->getDevice()->CreateBuffer(&bd, 0, &particleBuffer);
 
 	emitterData.emitPosition = XMFLOAT3(0.0, 0.0, 0.0);
 	emitterData.emitDirection = XMFLOAT3(0.0, 1.0, 0.0);
 	emitterData.particleAcceleration = XMFLOAT3(0.0, 7.8, 0.0);
 }
 
-ParticleEmitter::ParticleEmitter(UINT maxParticles, wchar_t* filepath, BlendType blendType, ID3D11Device* dev) :
-blendState(blendType, dev),
-sampler(dev),
-texture(filepath, dev),
+ParticleEmitter::ParticleEmitter(UINT maxParticles, wchar_t* filepath, BlendType blendType, GraphicsDevice* graphicsDevice) :
+blendState(blendType, graphicsDevice),
+sampler(graphicsDevice),
+texture(filepath, graphicsDevice),
 maxParticles(maxParticles),
 firstRun(true)
 {
-	streamOutShader.LoadShader(L"ParticleStreamVert.cso", Vert, dev);
-	streamOutShader.LoadShader(L"ParticleGenerationGeo.cso", GeometrySO, dev);
+	streamOutShader.LoadShader(L"ParticleStreamVert.cso", Vert, graphicsDevice);
+	streamOutShader.LoadShader(L"ParticleGenerationGeo.cso", GeometrySO, graphicsDevice);
 
-	drawShader.LoadShader(L"DrawParticleVert.cso", Vert, dev);
-	drawShader.LoadShader(L"ParticleBillboardGeo.cso", Geometry, dev);
-	drawShader.LoadShader(L"DrawParticlePix.cso", Pixel, dev);
+	drawShader.LoadShader(L"DrawParticleVert.cso", Vert, graphicsDevice);
+	drawShader.LoadShader(L"ParticleBillboardGeo.cso", Geometry, graphicsDevice);
+	drawShader.LoadShader(L"DrawParticlePix.cso", Pixel, graphicsDevice);
 
 	// Create vertex buffers
 	D3D11_BUFFER_DESC vb;
@@ -79,8 +79,8 @@ firstRun(true)
 	vb.CPUAccessFlags = 0;
 	vb.MiscFlags = 0;
 	vb.StructureByteStride = 0;
-	dev->CreateBuffer(&vb, 0, &streamBuffer);
-	dev->CreateBuffer(&vb, 0, &drawBuffer);
+	graphicsDevice->getDevice()->CreateBuffer(&vb, 0, &streamBuffer);
+	graphicsDevice->getDevice()->CreateBuffer(&vb, 0, &drawBuffer);
 
 	emitterParticle.initialPosition = XMFLOAT3(0.0, 0.0, 0.0);
 	emitterParticle.initialVelocity = XMFLOAT3(0.0, 1.0, 0.0);
@@ -93,7 +93,7 @@ firstRun(true)
 	srd.pSysMem = &emitterParticle;
 	vb.ByteWidth = sizeof(Particle);
 	vb.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	dev->CreateBuffer(&vb, &srd, &initBuffer);
+	graphicsDevice->getDevice()->CreateBuffer(&vb, &srd, &initBuffer);
 
 	HRESULT hr;
 	D3D11_BUFFER_DESC bd;
@@ -104,7 +104,7 @@ firstRun(true)
 	bd.MiscFlags = 0;
 	bd.StructureByteStride = 0;
 	bd.ByteWidth = sizeof(emitterData);
-	dev->CreateBuffer(&bd, 0, &particleBuffer);
+	graphicsDevice->getDevice()->CreateBuffer(&bd, 0, &particleBuffer);
 	
 	emitterData.emitPosition = XMFLOAT3(0.0, 0.0, 0.0);
 	emitterData.emitDirection = XMFLOAT3(0.0, 1.0, 0.0);
@@ -124,55 +124,54 @@ void ParticleEmitter::Update(float dt)
 
 }
 
-void ParticleEmitter::Draw(ID3D11DeviceContext* devCon)
+void ParticleEmitter::Draw(GraphicsDevice* graphicsDevice)
 {
 	// TODO: Put this somewhere else, VERY slow
-	devCon->VSSetConstantBuffers(4, 1, &particleBuffer);
-	devCon->GSSetConstantBuffers(4, 1, &particleBuffer);
-	devCon->PSSetConstantBuffers(4, 1, &particleBuffer);
-	devCon->UpdateSubresource(particleBuffer, 0, 0, &emitterData, 0, 0);
+	graphicsDevice->getDeviceContext()->VSSetConstantBuffers(4, 1, &particleBuffer);
+	graphicsDevice->getDeviceContext()->GSSetConstantBuffers(4, 1, &particleBuffer);
+	graphicsDevice->getDeviceContext()->PSSetConstantBuffers(4, 1, &particleBuffer);
+	graphicsDevice->getDeviceContext()->UpdateSubresource(particleBuffer, 0, 0, &emitterData, 0, 0);
 
 	// Set up particle information
-	blendState.BindBlendState(devCon);
-	texture.BindTexture(devCon);
-	sampler.BindSampler(devCon);
+	blendState.BindBlendState(graphicsDevice);
+	texture.BindTexture(graphicsDevice);
+	sampler.BindSampler(graphicsDevice);
 
 	UINT stride = sizeof(Particle);
 	UINT offset = 0;
 
 	// Use the init buffer if first time drawing/ just reset
 	if (firstRun)
-		devCon->IASetVertexBuffers(0, 1, &initBuffer, &stride, &offset);
+		graphicsDevice->getDeviceContext()->IASetVertexBuffers(0, 1, &initBuffer, &stride, &offset);
 	else
-		devCon->IASetVertexBuffers(0, 1, &drawBuffer, &stride, &offset);
+		graphicsDevice->getDeviceContext()->IASetVertexBuffers(0, 1, &drawBuffer, &stride, &offset);
 
 	// Bind the SO and SO shader
-	devCon->SOSetTargets(1, &streamBuffer, &offset);
+	graphicsDevice->getDeviceContext()->SOSetTargets(1, &streamBuffer, &offset);
 
-	streamOutShader.BindShader(devCon);
-
+	streamOutShader.BindShader(graphicsDevice);
 	// Run the stream out shader pass
 	if (firstRun)
 	{
-		devCon->Draw(1, 0);
+		graphicsDevice->getDeviceContext()->Draw(1, 0);
 		firstRun = false;
 	}
 	else
-		devCon->DrawAuto();
+		graphicsDevice->getDeviceContext()->DrawAuto();
 
 	// Unbind the Stream buffer
 	ID3D11Buffer* bufferArray[1] = { 0 };
-	devCon->SOSetTargets(1, bufferArray, &offset);
+	graphicsDevice->getDeviceContext()->SOSetTargets(1, bufferArray, &offset);
 
 	// Swap the buffers
 	std::swap(drawBuffer, streamBuffer);
 
 	// Run the draw shader pass
-	devCon->IASetVertexBuffers(0, 1, &drawBuffer, &stride, &offset);
+	graphicsDevice->getDeviceContext()->IASetVertexBuffers(0, 1, &drawBuffer, &stride, &offset);
 
-	drawShader.BindShader(devCon);
+	drawShader.BindShader(graphicsDevice);
 
-	devCon->DrawAuto();
+	graphicsDevice->getDeviceContext()->DrawAuto();
 }
 
 void ParticleEmitter::Reset()

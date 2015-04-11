@@ -2,6 +2,7 @@
 #define SHADER_HPP
 
 #include "Config.hpp"
+#include "GraphicsDevice.hpp"
 
 NS_BEGIN
 
@@ -25,15 +26,15 @@ public:
 
 	/// <summary>Loads a compiled shader (.cso, etc) and stores it in its proper DirectX shader object
 	/// </summary>
-	bool LoadShader(wchar_t* filepath, ShaderType type, ID3D11Device* dev);
+	bool LoadShader(wchar_t* filepath, ShaderType type, GraphicsDevice* graphicsDevice);
 
 	/// <summary>Binds the given shader type to the pipeline for use
 	/// </summary>
-	void BindShader(ShaderType type, ID3D11DeviceContext* devCon);
+	void BindShader(ShaderType type, GraphicsDevice* graphicsDevice);
 
-	void BindShader(ID3D11DeviceContext* devCon);
+	void BindShader(GraphicsDevice* graphicsDevice);
 
-	void UnbindPixelShader(ID3D11DeviceContext* devCon);
+	void UnbindPixelShader(GraphicsDevice* graphicsDevice);
 private:
 	bool CheckLoaded(ShaderType type);
 

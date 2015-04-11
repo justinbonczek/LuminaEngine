@@ -26,7 +26,7 @@ public:
 	/// <summary>
 	/// Sets proper graphics pipeline values and renders the object
 	/// </summary>
-	virtual void Draw(ID3D11DeviceContext* devCon);
+	virtual void Draw(GraphicsDevice* graphicsDevice);
 
 	/// <summary>
 	/// Sets the position of the object to the new value
@@ -56,9 +56,9 @@ public:
 	/// </summary>
 	XMFLOAT4X4 WorldInverseTranspose(void);
 
-	void LoadTexture(wchar_t* filepath, ID3D11Device* dev);
+	void LoadTexture(wchar_t* filepath, GraphicsDevice* graphicsDevice);
 	void SetShader(Shader* shader);
-	void SetShader(wchar_t* filepath, ShaderType type, ID3D11Device* dev);
+	void SetShader(wchar_t* filepath, ShaderType type, GraphicsDevice* graphicsDevice);
 
 	/// <summary>
 	/// Returns the object's LightMaterial
