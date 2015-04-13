@@ -1,6 +1,7 @@
 build/*
 ipch/*
 LuminaEngine/Debug/*
+DirectXTK/bin/*
 
 # Batch files for workflow
 *.bat
