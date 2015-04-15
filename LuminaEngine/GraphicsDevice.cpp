@@ -134,6 +134,17 @@ void GraphicsDevice::BindBackBuffer()
 	devCon->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
 }
 
+void GraphicsDevice::SetShaderResource(UINT slot, ID3D11ShaderResourceView* srv)
+{
+	devCon->VSSetShaderResources(slot, 1, &srv);
+	devCon->PSSetShaderResources(slot, 1, &srv);
+}
+
+void GraphicsDevice::SetDepthStencilState(DepthStencilState depthStencilState)
+{
+	depthStencilState.BindDepthStencilState(this);
+}
+
 ID3D11Device* GraphicsDevice::getDevice()
 {
 	return dev;

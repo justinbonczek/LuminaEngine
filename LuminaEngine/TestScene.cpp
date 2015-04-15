@@ -67,12 +67,12 @@ void TestScene::LoadAssets()
 	GameObject* plane = new GameObject(planeMesh, planeMat);
 	plane->SetPosition(0.0f, -3.0f, 0.0f);
 
-	AddGameObject(cube);
-	AddGameObject(cube2);
-	AddGameObject(cube3);
-	AddGameObject(cube4);
+	//AddGameObject(cube);
+	//AddGameObject(cube2);
+	//AddGameObject(cube3);
+	//AddGameObject(cube4);
 	AddGameObject(plane);
-	//AddSystem(fireEmitter);
+	AddSystem(fireEmitter);
 	//AddLight(sLight);
 	AddLight(dLight);
 }

@@ -149,6 +149,7 @@ void ParticleEmitter::Draw(GraphicsDevice* graphicsDevice)
 	// Bind the SO and SO shader
 	graphicsDevice->getDeviceContext()->SOSetTargets(1, &streamBuffer, &offset);
 
+	graphicsDevice->SetDepthStencilState(DepthStencilState::NoDepth);
 	streamOutShader.BindShader(graphicsDevice);
 	// Run the stream out shader pass
 	if (firstRun)
@@ -170,6 +171,7 @@ void ParticleEmitter::Draw(GraphicsDevice* graphicsDevice)
 	graphicsDevice->getDeviceContext()->IASetVertexBuffers(0, 1, &drawBuffer, &stride, &offset);
 
 	drawShader.BindShader(graphicsDevice);
+	graphicsDevice->SetDepthStencilState(DepthStencilState::Default);
 
 	graphicsDevice->getDeviceContext()->DrawAuto();
 }

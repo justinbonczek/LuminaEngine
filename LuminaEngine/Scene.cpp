@@ -277,6 +277,8 @@ void Scene::CalculateShadows()
 		n->SetShadowPass(true);
 	}
 	
+	graphicsDevice->SetShaderResource(3, NULL);
+
 	// Render Shadowmaps
 	for (int i = 0; i < shadowData.numSM; i++)
 	{

@@ -4,6 +4,8 @@
 #include "Config.hpp"
 
 #include "Window.hpp"
+#include "DepthStencilState.hpp"
+
 
 NS_BEGIN
 
@@ -22,6 +24,12 @@ public:
 
 	void Display();
 	void BindBackBuffer();
+
+	/// <summary>
+	/// Clean up later
+	/// </summary>
+	void SetShaderResource(UINT slot, ID3D11ShaderResourceView* srv);
+	void SetDepthStencilState(DepthStencilState depthStencilState);
 
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();

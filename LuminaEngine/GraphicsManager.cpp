@@ -27,6 +27,8 @@ bool GraphicsManager::Initialize(UINT windowWidth, UINT windowHeight, std::wstri
 		return false;
 	if (!graphicsDevice.Initialize(window))
 		return false;
+
+	DepthStencilState::Initialize(&graphicsDevice);
 }
 
 void GraphicsManager::Clear()

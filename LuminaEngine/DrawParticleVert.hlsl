@@ -34,9 +34,10 @@ VertexOutput main(Particle input)
 	o.worldpos = input.initialPosition + t * input.initialVelocity + 0.5f * t * t * acceleration;
 
 	float alpha = 1.0 - smoothstep(0.0, 1.0, t / 1.0);
-	o.color = float4(1.0, 1.0, 1.0, alpha);
+	o.color = float4(1.0, 0.0, 0.0, alpha);
 
 	o.type = input.type;
+	o.size = input.size;
 
 	return o;
 }
